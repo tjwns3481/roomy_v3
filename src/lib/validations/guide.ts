@@ -38,12 +38,15 @@ const slugSchema = z
 export const createGuideSchema = z.object({
   accommodation_id: z
     .string()
-    .uuid("올바른 숙소 ID 형식이 아닙니다"),
+    .uuid("올바른 숙소 ID 형식이 아닙니다")
+    .optional(),
   title: z
     .string()
     .min(1, "제목을 입력해주세요")
-    .max(100, "제목은 100자를 초과할 수 없습니다"),
+    .max(100, "제목은 100자를 초과할 수 없습니다")
+    .optional(),
   slug: slugSchema.optional(),
+  template_id: z.string().optional(),
 });
 
 // 가이드 수정 요청 스키마
