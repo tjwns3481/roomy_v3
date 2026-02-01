@@ -7,3 +7,4 @@ export {
   type UseAutoSaveResult,
   type GuideAutoSaveData,
 } from "./useAutoSave";
+export { useAIChat } from "./useAIChat";

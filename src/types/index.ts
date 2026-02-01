@@ -175,6 +175,14 @@ export interface Template {
   blocks: ContentBlock[];
 }
 
+// Chat Message
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  createdAt: Date;
+}
+
 // API Response
 export interface ApiResponse<T> {
   success: boolean;
