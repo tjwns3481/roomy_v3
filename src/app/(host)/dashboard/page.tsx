@@ -20,9 +20,9 @@ export default function DashboardPage() {
         slug: 'jeju-poolvilla',
         is_published: true,
         view_count: 523,
-        updated_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+        updated_at: new Date('2023-10-12').toISOString(),
         accommodation_name: '제주 풀빌라',
-        thumbnail_url: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+        thumbnail_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRQZ0tL9IzqNe1agxHZcZxYmDjAVSvQaWJhszGWRHjuVVIf6_YEgVbGS2vQvbd75UlmPDFYoOlT9vChBAC74nTHigd2U2vYZZ8W3Ud-G7dby5Xp42vyHnuoV5Chp40dOjbE3c30Gx-MueiMR92ohdQ7FY0jOciVh6Mj2Eqr2QkXBUCDT-5YU0jYshn5MRS8Pw-aSRkxd6MiLWcX-boWyvt8quyJAYcAZ7lyArmkOsyOHdoDcUxNr0Mn7A9jApi04j1If0N0vE482A',
       },
       {
         id: '2',
@@ -32,7 +32,7 @@ export default function DashboardPage() {
         view_count: 0,
         updated_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
         accommodation_name: '강원 펜션',
-        thumbnail_url: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
+        thumbnail_url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD6W6Ft0rkeKO0q6eU5YdXWU2xWKYKsTvAEtbnaJ7awjDA-_aHjULnOEJ08zSvSgO1XlUm0UqzN5qSTPJBdEBRsA_pXUjGd14gq5D_tml18pbK1GlE1MmmP1e2VPqyxo3c5saEYVHdkJpATtOgEKAtSa4f50lueXCbn0nWXFBadh5ENVI0qVk8YEhfKZv0G0V8eBVo5-omqC2SuFrwq2Ln9VIzG7clgVqX3oJgKKlFuvjx75ca_WcKuKGN2pziT7Nj85IgsLslYA14',
       },
     ];
 
