@@ -1,7 +1,7 @@
 import StatsGrid from '@/components/admin/StatsGrid';
 import ActivityTable from '@/components/admin/ActivityTable';
-import SignupsChart from '@/components/admin/SignupsChart';
-import GuideTypesChart from '@/components/admin/GuideTypesChart';
+import DynamicSignupsChart from '@/components/admin/DynamicSignupsChart';
+import DynamicGuideTypesChart from '@/components/admin/DynamicGuideTypesChart';
 
 // Dummy data for initial implementation
 const dummyStats = {
@@ -79,8 +79,8 @@ export default function AdminDashboardPage() {
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SignupsChart />
-        <GuideTypesChart />
+        <DynamicSignupsChart />
+        <DynamicGuideTypesChart />
       </div>
 
       {/* Activity Table */}

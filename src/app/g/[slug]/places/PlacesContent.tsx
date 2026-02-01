@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { PlaceItem } from '@/types';
-import { MapView } from '@/components/guest/MapView';
+import DynamicMapView from '@/components/guest/DynamicMapView';
 import Link from 'next/link';
 
 interface PlacesContentProps {
@@ -189,7 +189,7 @@ export function PlacesContent({
         </div>
 
         {/* 지도 */}
-        <MapView
+        <DynamicMapView
           places={filteredPlaces}
           center={center}
           selectedPlace={selectedPlace}
