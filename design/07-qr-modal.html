@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QR Code Share Modal</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b9dee",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111518] dark:text-white overflow-hidden h-screen">
+<!-- Mock Dashboard Background (Blurred Layer) -->
+<div aria-hidden="true" class="fixed inset-0 z-0 flex flex-col w-full h-full pointer-events-none select-none blur-[6px] opacity-80">
+<!-- Mock Header -->
+<div class="h-16 bg-white dark:bg-[#1a2632] border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6 shrink-0">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-xl">grid_view</span>
+</div>
+<div class="w-32 h-4 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+</div>
+</div>
+<!-- Mock Body -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Mock Sidebar -->
+<div class="hidden md:flex w-64 bg-white dark:bg-[#1a2632] border-r border-gray-200 dark:border-gray-700 flex-col p-6 gap-6">
+<div class="w-full h-8 bg-primary/10 rounded"></div>
+<div class="space-y-4">
+<div class="w-3/4 h-4 bg-gray-100 dark:bg-gray-700 rounded"></div>
+<div class="w-full h-4 bg-gray-100 dark:bg-gray-700 rounded"></div>
+<div class="w-5/6 h-4 bg-gray-100 dark:bg-gray-700 rounded"></div>
+</div>
+</div>
+<!-- Mock Content Area -->
+<div class="flex-1 bg-background-light dark:bg-background-dark p-8">
+<div class="max-w-5xl mx-auto space-y-6">
+<div class="flex justify-between items-center mb-8">
+<div class="w-48 h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+<div class="w-24 h-8 bg-primary rounded"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="aspect-[4/3] bg-white dark:bg-[#1a2632] rounded-lg shadow-sm"></div>
+<div class="aspect-[4/3] bg-white dark:bg-[#1a2632] rounded-lg shadow-sm"></div>
+<div class="aspect-[4/3] bg-white dark:bg-[#1a2632] rounded-lg shadow-sm"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-all duration-300">
+<!-- Modal Card -->
+<div class="relative w-full max-w-[500px] bg-white dark:bg-[#1c242c] rounded-xl shadow-2xl overflow-hidden flex flex-col">
+<!-- Header -->
+<div class="flex items-center justify-between px-6 py-5 border-b border-[#f0f3f4] dark:border-[#2a3441]">
+<h3 class="text-[#111518] dark:text-white text-lg font-bold tracking-tight">QR 코드 공유</h3>
+<button aria-label="Close modal" class="group flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-gray-400 group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-gray-300">close</span>
+</button>
+</div>
+<!-- Body -->
+<div class="p-8 flex flex-col items-center w-full">
+<!-- QR Code Visualization -->
+<div class="relative bg-white p-3 rounded-lg border border-[#e5e7eb] dark:border-[#2a3441] shadow-sm mb-5">
+<div class="w-[180px] h-[180px] bg-white bg-cover bg-center" data-alt="QR Code leading to Jeju Pool Villa Guide" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAPXzmbvbOrmSgi-qpud5MDTfpoy3wBJD6IuIbrbFXVtsfyMKr2QLHCRJ_2Iz-9iME1HRq9LWriJ0KTJBSHGDG0xBKHGl0x4wBLh3HxeZHZc3gubL4ifrt8yVJJ2uC7nUI5ajO0RT4ggiuRDcBL1W9Xt7hwQH6XK_ibH4XK5BiJ2Bc1JK8aX06lfAakHiaf_Gdxn1bTGMxDhsRLNKEA5JECdJ7LCfny9cbcFFLaYHBnBdXGHfeoGTs8j3mILe5ZSEXXtykk4W23mTs");'>
+</div>
+</div>
+<!-- Guide Title -->
+<h2 class="text-[#111518] dark:text-white text-xl font-bold leading-tight tracking-[-0.015em] text-center mb-8">
+                    제주 풀빌라 가이드
+                </h2>
+<!-- URL Copy Section -->
+<div class="w-full flex items-center gap-2 p-1.5 pl-4 mb-6 rounded-lg border border-[#dbe1e6] dark:border-[#334155] bg-background-light dark:bg-[#101a22]">
+<span class="flex-1 text-[#111518] dark:text-gray-300 text-sm font-medium truncate select-all">
+                        roomy.app/g/jeju-villa
+                    </span>
+<button class="flex shrink-0 cursor-pointer items-center justify-center rounded-[0.4rem] h-9 px-4 bg-primary hover:bg-primary/90 text-white text-sm font-bold leading-normal transition-colors">
+<span class="truncate">링크 복사</span>
+</button>
+</div>
+<!-- Download Buttons Group -->
+<div class="w-full grid grid-cols-2 gap-3 mb-8">
+<button class="flex cursor-pointer items-center justify-center gap-2 rounded-lg h-11 px-4 border border-[#dbe1e6] dark:border-[#334155] bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-[#2a3441] text-[#111518] dark:text-white text-sm font-bold transition-all">
+<span class="material-symbols-outlined text-[20px]">image</span>
+<span class="truncate">PNG 다운로드</span>
+</button>
+<button class="flex cursor-pointer items-center justify-center gap-2 rounded-lg h-11 px-4 border border-[#dbe1e6] dark:border-[#334155] bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-[#2a3441] text-[#111518] dark:text-white text-sm font-bold transition-all">
+<span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+<span class="truncate">PDF 다운로드</span>
+</button>
+</div>
+<!-- Footer Tip -->
+<div class="w-full flex items-start gap-3 p-4 bg-primary/5 dark:bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary text-[20px] shrink-0">print</span>
+<p class="text-sm text-gray-600 dark:text-gray-300 leading-snug">
+                        QR 코드를 숙소에 비치하여 게스트가 쉽게 접근할 수 있도록 하세요.
+                    </p>
+</div>
+</div>
+</div>
+</div>
+</body></html>

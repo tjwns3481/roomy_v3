@@ -1,0 +1,189 @@
+# Roomy v3 - 화면 명세 커버리지 리포트
+version: "1.0"
+generated_at: "2026-02-01T18:30:00Z"
+
+summary:
+  total_screens: 14
+  screens_with_design: 14
+  coverage: 100%
+
+# 화면별 데이터 요구사항 검증
+screen_coverage:
+  # 인증
+  auth/login:
+    status: ✅
+    data_requirements: []
+    notes: 인증 전 화면, 데이터 요구 없음
+
+  auth/signup:
+    status: ✅
+    data_requirements: []
+    notes: 인증 전 화면, 데이터 요구 없음
+
+  # 호스트
+  host/dashboard:
+    status: ✅
+    data_requirements:
+      - resource: guide
+        needs: [id, title, slug, is_published, view_count, updated_at]
+        coverage: 100%
+      - resource: user
+        needs: [id, name, email]
+        coverage: 100%
+
+  host/editor:
+    status: ✅
+    data_requirements:
+      - resource: guide
+        needs: [id, title, slug, content_blocks, wifi_ssid, wifi_password, is_published]
+        coverage: 100%
+      - resource: story
+        needs: [id, media_url, media_type, order_index]
+        coverage: 100%
+
+  host/template-select:
+    status: ✅
+    data_requirements:
+      - resource: template
+        needs: [id, name, thumbnail, category, is_available]
+        notes: 정적 데이터 (하드코딩 또는 CMS)
+
+  host/settings:
+    status: ✅
+    data_requirements:
+      - resource: user
+        needs: [id, name, email, phone, avatar_url]
+        coverage: 100%
+
+  host/qr-modal:
+    status: ✅
+    data_requirements:
+      - resource: guide
+        needs: [id, slug, title]
+        coverage: 100%
+
+  # 게스트
+  guest/main:
+    status: ✅
+    data_requirements:
+      - resource: guide
+        needs: [id, title, content_blocks, wifi_ssid, wifi_password]
+        coverage: 100%
+      - resource: story
+        needs: [id, media_url, media_type, order_index]
+        coverage: 100%
+      - resource: accommodation
+        needs: [name, address]
+        coverage: 100%
+
+  guest/story-viewer:
+    status: ✅
+    data_requirements:
+      - resource: story
+        needs: [id, media_url, media_type, order_index]
+        coverage: 100%
+
+  guest/bottomsheet:
+    status: ✅
+    data_requirements:
+      - resource: guide
+        needs: [wifi_ssid, wifi_password, content_blocks]
+        coverage: 100%
+
+  guest/ai-chatbot:
+    status: ✅
+    data_requirements:
+      - resource: guide
+        needs: [id, title, content_blocks, wifi_ssid, wifi_password]
+        coverage: 100%
+      - resource: ai_conversation
+        needs: [id, question, answer, created_at]
+        coverage: 100%
+
+  guest/detail-rules:
+    status: ✅
+    data_requirements:
+      - resource: guide
+        needs: [content_blocks]
+        extract: "type === 'rules'"
+        coverage: 100%
+
+  guest/detail-places:
+    status: ✅
+    data_requirements:
+      - resource: guide
+        needs: [content_blocks]
+        extract: "type === 'places'"
+        coverage: 100%
+      - resource: accommodation
+        needs: [address, latitude, longitude]
+        notes: 좌표 필드 추가 필요
+
+  # 관리자
+  admin/dashboard:
+    status: ✅
+    data_requirements:
+      - resource: user
+        needs: [id, email, created_at]
+        aggregate: [count, count_today]
+        coverage: 100%
+      - resource: guide
+        needs: [id, title, is_published, view_count]
+        aggregate: [count, sum(view_count)]
+        coverage: 100%
+      - resource: visit
+        needs: [id, created_at]
+        aggregate: [count_today]
+        coverage: 100%
+      - resource: ai_conversation
+        needs: [id, created_at]
+        aggregate: [count_today]
+        coverage: 100%
+
+# 리소스별 사용 현황
+resource_usage:
+  user:
+    used_by: [dashboard, settings, admin-dashboard]
+    fields_used: [id, email, name, phone, avatar_url, role, created_at]
+
+  guide:
+    used_by: [dashboard, editor, qr-modal, guest-main, ai-chatbot, detail-rules, detail-places, admin-dashboard]
+    fields_used: [id, title, slug, content_blocks, wifi_ssid, wifi_password, is_published, view_count, updated_at]
+
+  story:
+    used_by: [editor, guest-main, story-viewer]
+    fields_used: [id, media_url, media_type, order_index]
+
+  accommodation:
+    used_by: [guest-main, detail-places]
+    fields_used: [name, address]
+    missing_fields: [latitude, longitude]
+
+  ai_conversation:
+    used_by: [ai-chatbot, admin-dashboard]
+    fields_used: [id, question, answer, created_at, session_id]
+
+  visit:
+    used_by: [admin-dashboard]
+    fields_used: [id, created_at]
+
+# 권장 사항
+recommendations:
+  - id: add_coordinates
+    priority: medium
+    description: accommodation 테이블에 latitude, longitude 필드 추가
+    affected: detail-places
+
+  - id: add_template_table
+    priority: low
+    description: template 데이터를 DB 또는 CMS로 관리 고려
+    affected: template-select
+
+# 누락된 화면 (design 없음)
+missing_screens:
+  - auth/forgot-password
+  - host/pricing
+  - guest/error-404
+  - admin/users
+  - admin/guides
+  - admin/ai-logs

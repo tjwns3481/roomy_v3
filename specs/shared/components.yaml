@@ -1,0 +1,207 @@
+# Roomy v3 - 공통 컴포넌트 정의
+version: "1.0"
+
+# 기본 UI 컴포넌트
+components:
+  # 버튼
+  button:
+    variants: [primary, secondary, outline, ghost, danger, kakao]
+    sizes: [sm, md, lg]
+    props:
+      - text: string
+      - icon: string?
+      - fullWidth: boolean?
+      - disabled: boolean?
+      - loading: boolean?
+
+  # 입력 필드
+  input:
+    types: [text, email, password, tel, number, search]
+    props:
+      - placeholder: string?
+      - value: string
+      - required: boolean?
+      - disabled: boolean?
+      - error: string?
+      - helperText: string?
+
+  # 카드
+  card:
+    variants: [default, elevated, outlined]
+    props:
+      - title: string?
+      - subtitle: string?
+      - thumbnail: string?
+      - actions: Action[]?
+
+  # 모달
+  modal:
+    props:
+      - title: string
+      - width: sm | md | lg
+      - closable: boolean
+      - overlay: boolean
+
+  # 바텀시트
+  bottomsheet:
+    props:
+      - height: auto | number
+      - maxHeight: string
+      - draggable: boolean
+      - backdrop: boolean
+
+  # 아바타
+  avatar:
+    sizes: [xs, sm, md, lg, xl]
+    props:
+      - src: string?
+      - name: string?
+      - icon: string?
+      - status: online | offline?
+
+  # 배지
+  badge:
+    variants: [default, success, warning, danger, info]
+    props:
+      - text: string
+      - dot: boolean?
+
+  # 토스트
+  toast:
+    variants: [success, error, warning, info]
+    props:
+      - message: string
+      - duration: number?
+      - action: Action?
+
+# 레이아웃 컴포넌트
+layouts:
+  header:
+    slots: [left, center, right]
+    props:
+      - sticky: boolean?
+      - transparent: boolean?
+
+  sidebar:
+    props:
+      - width: number
+      - collapsible: boolean?
+      - theme: light | dark
+
+  grid:
+    props:
+      - columns: number
+      - gap: number?
+      - responsive: boolean?
+
+  container:
+    variants: [fluid, centered, narrow]
+
+# 데이터 표시 컴포넌트
+data_display:
+  table:
+    props:
+      - columns: Column[]
+      - data: any[]
+      - sortable: boolean?
+      - filterable: boolean?
+      - pagination: boolean?
+
+  list:
+    variants: [default, card, compact]
+    props:
+      - items: any[]
+      - renderItem: Component
+
+  stat-card:
+    props:
+      - title: string
+      - value: string | number
+      - change: string?
+      - icon: string?
+      - trend: up | down?
+
+  empty-state:
+    props:
+      - icon: string
+      - title: string
+      - description: string?
+      - cta: string?
+
+# 네비게이션 컴포넌트
+navigation:
+  nav-list:
+    props:
+      - items: NavItem[]
+      - vertical: boolean?
+
+  tabs:
+    props:
+      - items: TabItem[]
+      - activeTab: string
+
+  breadcrumb:
+    props:
+      - items: BreadcrumbItem[]
+
+  dropdown:
+    props:
+      - trigger: Component
+      - items: MenuItem[]
+
+# 폼 컴포넌트
+form:
+  checkbox:
+    props:
+      - label: string
+      - checked: boolean
+      - required: boolean?
+
+  radio-group:
+    props:
+      - options: Option[]
+      - value: string
+      - name: string
+
+  select:
+    props:
+      - options: Option[]
+      - value: string
+      - placeholder: string?
+      - multiple: boolean?
+
+  image-upload:
+    props:
+      - accept: string[]
+      - maxSize: number
+      - preview: boolean?
+
+# 피드백 컴포넌트
+feedback:
+  loading:
+    variants: [spinner, skeleton, progress]
+
+  alert:
+    variants: [info, success, warning, error]
+    props:
+      - title: string?
+      - message: string
+      - dismissible: boolean?
+
+# 모바일 전용 컴포넌트
+mobile:
+  fab:
+    props:
+      - icon: string
+      - position: bottom-right | bottom-left
+      - tooltip: string?
+
+  horizontal-scroll:
+    props:
+      - items: any[]
+      - snap: boolean?
+
+  device-mockup:
+    variants: [iphone, android]
+    props:
+      - content: Component

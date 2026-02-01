@@ -1,0 +1,120 @@
+# QR 코드 모달 명세
+version: "2.0"
+
+screen:
+  id: qr-modal
+  name: QR 코드 다운로드
+  route: null  # modal
+  layout: modal
+  design_reference: design/07-qr-modal.html
+
+data_requirements:
+  - resource: guide
+    needs: [id, slug, title]
+
+components:
+  - id: modal_container
+    type: modal
+    position: center
+    function: QR 모달 컨테이너
+    props:
+      width: 400px
+
+  - id: modal_header
+    type: header
+    position: modal-top
+    function: 모달 헤더
+    children:
+      - id: title
+        type: text
+        props:
+          text: QR 코드 공유
+      - id: close_button
+        type: button
+        props:
+          icon: x
+          variant: ghost
+
+  - id: qr_image
+    type: image
+    position: modal-body
+    function: QR 코드 이미지
+    props:
+      size: 200x200
+      generated: true
+      data: guide.url
+
+  - id: guide_title
+    type: text
+    position: modal-body
+    function: 가이드 제목 표시
+
+  - id: url_section
+    type: input-group
+    position: modal-body
+    function: URL 복사 영역
+    children:
+      - id: url_display
+        type: input
+        props:
+          readonly: true
+          value: "roomy.app/g/{guide.slug}"
+      - id: copy_button
+        type: button
+        props:
+          icon: copy
+          text: 링크 복사
+
+  - id: download_buttons
+    type: button-group
+    position: modal-body
+    function: 다운로드 버튼들
+    children:
+      - id: png_download
+        type: button
+        props:
+          variant: outline
+          text: PNG 다운로드
+      - id: pdf_download
+        type: button
+        props:
+          variant: outline
+          text: PDF 다운로드
+
+  - id: tip_text
+    type: text
+    position: modal-footer
+    function: 안내 문구
+    props:
+      text: QR 코드를 숙소에 비치하여 게스트가 쉽게 접근할 수 있도록 하세요
+      variant: helper
+
+events:
+  - trigger: close_button.click
+    action: close_modal
+
+  - trigger: copy_button.click
+    action: clipboard.copy
+    params: { text: guide.url }
+    on_success: show_toast("복사되었습니다")
+
+  - trigger: png_download.click
+    action: download.qr
+    params: { format: png }
+
+  - trigger: pdf_download.click
+    action: download.qr
+    params: { format: pdf }
+
+tests:
+  - name: QR 코드 표시
+    when: 모달 열림
+    then: [QR 코드 이미지 생성됨]
+
+  - name: 링크 복사
+    when: 복사 버튼 클릭
+    then: [클립보드에 URL 복사, 토스트 표시]
+
+  - name: PNG 다운로드
+    when: PNG 버튼 클릭
+    then: [PNG 파일 다운로드]

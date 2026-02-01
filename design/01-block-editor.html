@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Accommodation Guide Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0d7ff2",
+              "primary-hover": "#0b6bcb",
+              "background-light": "#f5f7f8",
+              "background-dark": "#101922",
+              "border-light": "#e2e8f0",
+              "border-dark": "#2d3748",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+            boxShadow: {
+                'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                'card': '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display h-screen flex flex-col overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="h-16 bg-white dark:bg-[#1e293b] border-b border-border-light dark:border-border-dark flex items-center justify-between px-6 shrink-0 z-20">
+<!-- Left: Back & Title -->
+<div class="flex items-center gap-4 w-1/3">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+</button>
+<div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-1"></div>
+<input class="bg-transparent border-none text-lg font-bold text-slate-800 dark:text-white focus:ring-0 p-0 hover:text-primary transition-colors cursor-text truncate w-full" type="text" value="제주 풀빌라 가이드"/>
+</div>
+<!-- Center: Status & Device Toggle -->
+<div class="flex items-center justify-center gap-6 w-1/3">
+<div class="flex items-center gap-1.5 text-xs font-medium text-slate-400">
+<span class="material-symbols-outlined text-[16px] text-green-500">check_circle</span>
+<span>저장됨</span>
+</div>
+<div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-lg flex items-center gap-1">
+<button class="p-1.5 rounded bg-white dark:bg-slate-600 shadow-sm text-primary dark:text-white">
+<span class="material-symbols-outlined text-[18px]">smartphone</span>
+</button>
+<button class="p-1.5 rounded hover:bg-white/50 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition-colors">
+<span class="material-symbols-outlined text-[18px]">desktop_windows</span>
+</button>
+</div>
+</div>
+<!-- Right: Actions -->
+<div class="flex items-center justify-end gap-3 w-1/3">
+<button class="flex items-center justify-center size-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors" title="Theme Settings">
+<span class="material-symbols-outlined text-[20px]">palette</span>
+</button>
+<button class="flex items-center justify-center size-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors" title="Preview">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-1"></div>
+<button class="bg-primary hover:bg-primary-hover text-white px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition-colors flex items-center gap-2">
+<span>발행</span>
+<span class="material-symbols-outlined text-[16px]">rocket_launch</span>
+</button>
+</div>
+</header>
+<!-- Main Workspace -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Left Sidebar: Component Library -->
+<aside class="w-[280px] bg-white dark:bg-[#1e293b] border-r border-border-light dark:border-border-dark flex flex-col shrink-0 z-10">
+<!-- Search -->
+<div class="p-4 border-b border-border-light dark:border-border-dark">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[20px]">search</span>
+<input class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-primary/20" placeholder="블록 검색..." type="text"/>
+</div>
+</div>
+<!-- Block Categories -->
+<div class="flex-1 overflow-y-auto p-4 space-y-6">
+<!-- Category: Basic Info -->
+<div>
+<h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-1">기본정보 (Basic)</h3>
+<div class="grid grid-cols-2 gap-2">
+<!-- Block Item -->
+<div class="group flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-border-light dark:border-border-dark hover:border-primary hover:bg-primary/5 cursor-grab active:cursor-grabbing transition-all bg-white dark:bg-slate-800 shadow-sm hover:shadow-md">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300 group-hover:text-primary text-[28px]">wifi</span>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-primary">Wi-Fi</span>
+</div>
+<div class="group flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-border-light dark:border-border-dark hover:border-primary hover:bg-primary/5 cursor-grab active:cursor-grabbing transition-all bg-white dark:bg-slate-800 shadow-sm hover:shadow-md">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300 group-hover:text-primary text-[28px]">map</span>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-primary">위치</span>
+</div>
+<div class="group flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-border-light dark:border-border-dark hover:border-primary hover:bg-primary/5 cursor-grab active:cursor-grabbing transition-all bg-white dark:bg-slate-800 shadow-sm hover:shadow-md">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300 group-hover:text-primary text-[28px]">call</span>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-primary">연락처</span>
+</div>
+<div class="group flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-border-light dark:border-border-dark hover:border-primary hover:bg-primary/5 cursor-grab active:cursor-grabbing transition-all bg-white dark:bg-slate-800 shadow-sm hover:shadow-md">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300 group-hover:text-primary text-[28px]">gavel</span>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-primary">이용규칙</span>
+</div>
+</div>
+</div>
+<!-- Category: Content -->
+<div>
+<h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-1">콘텐츠 (Content)</h3>
+<div class="grid grid-cols-2 gap-2">
+<div class="group flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-border-light dark:border-border-dark hover:border-primary hover:bg-primary/5 cursor-grab active:cursor-grabbing transition-all bg-white dark:bg-slate-800 shadow-sm hover:shadow-md">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300 group-hover:text-primary text-[28px]">image</span>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-primary">이미지</span>
+</div>
+<div class="group flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-border-light dark:border-border-dark hover:border-primary hover:bg-primary/5 cursor-grab active:cursor-grabbing transition-all bg-white dark:bg-slate-800 shadow-sm hover:shadow-md">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300 group-hover:text-primary text-[28px]">article</span>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-primary">텍스트</span>
+</div>
+<div class="group flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-border-light dark:border-border-dark hover:border-primary hover:bg-primary/5 cursor-grab active:cursor-grabbing transition-all bg-white dark:bg-slate-800 shadow-sm hover:shadow-md">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300 group-hover:text-primary text-[28px]">grid_view</span>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-primary">갤러리</span>
+</div>
+<div class="group flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-border-light dark:border-border-dark hover:border-primary hover:bg-primary/5 cursor-grab active:cursor-grabbing transition-all bg-white dark:bg-slate-800 shadow-sm hover:shadow-md">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300 group-hover:text-primary text-[28px]">smart_display</span>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-primary">동영상</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Center: Canvas / Mobile Preview -->
+<main class="flex-1 bg-background-light dark:bg-[#0f172a] relative overflow-hidden flex flex-col items-center justify-center p-8">
+<!-- Canvas Toolbar (Zoom, etc - visual only) -->
+<div class="absolute top-6 right-6 flex items-center gap-2 bg-white dark:bg-slate-800 p-1.5 rounded-lg shadow-sm border border-border-light dark:border-border-dark z-10">
+<button class="p-1 text-slate-500 hover:text-slate-800 dark:hover:text-white"><span class="material-symbols-outlined text-[18px]">remove</span></button>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300 w-8 text-center">100%</span>
+<button class="p-1 text-slate-500 hover:text-slate-800 dark:hover:text-white"><span class="material-symbols-outlined text-[18px]">add</span></button>
+</div>
+<!-- Mobile Device Frame -->
+<div class="relative w-[375px] h-full max-h-[812px] bg-white dark:bg-black rounded-[3rem] shadow-2xl border-[8px] border-slate-900 dark:border-slate-800 overflow-hidden ring-1 ring-slate-900/5 shrink-0">
+<!-- Notch -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-7 bg-slate-900 rounded-b-xl z-20"></div>
+<!-- Screen Content -->
+<div class="h-full w-full overflow-y-auto hide-scrollbar bg-slate-50 relative pb-10">
+<!-- Cover Image Block -->
+<div class="relative h-48 w-full group/block hover:ring-2 hover:ring-blue-300 z-0">
+<img alt="Villa Cover" class="w-full h-full object-cover" data-alt="Modern tropical pool villa with blue water and palm trees" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmGlmvLTUp3Isjw9vFCE23VBK6KcNvW7rdu5kSaPxWoAuBE8hw9tmn-Du8tvKE1NSLuUO3lILGRt6ZoiLpbyO7GKosHh0TVmHvzRpb-sakrig3VPpeKwlePCNwokTs27fmCmhKH9M2qqyESvGNtwW2F154g5iVfjj5a47-5DBtATbzQP83H4Tq---mMUGqI52US68omdjVss_1QtStYTlfiaFNkL6eDYG-vPEOYz_HLrTmgAqKzIkVh1ql0f6xQP53FQofvX7Y32M"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-5">
+<div>
+<h1 class="text-white text-xl font-bold leading-tight">제주 오션 뷰 풀빌라</h1>
+<p class="text-white/80 text-xs mt-1">서귀포시, 제주</p>
+</div>
+</div>
+<!-- Block Actions Hover -->
+<div class="absolute top-2 right-2 hidden group-hover/block:flex gap-1">
+<button class="bg-white/90 p-1 rounded shadow text-slate-700 hover:text-primary"><span class="material-symbols-outlined text-[16px]">edit</span></button>
+</div>
+</div>
+<!-- Add Button Overlay (Hover Zone) -->
+<div class="h-4 w-full relative group/add flex items-center justify-center -my-2 z-10 hover:z-20">
+<div class="w-[90%] h-0.5 bg-primary opacity-0 group-hover/add:opacity-100 transition-opacity"></div>
+<button class="absolute bg-primary text-white rounded-full p-0.5 opacity-0 group-hover/add:opacity-100 transition-all shadow-sm transform scale-0 group-hover/add:scale-100">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+<!-- Welcome Text Block -->
+<div class="bg-white p-5 mb-1 group/block hover:ring-2 hover:ring-blue-300 relative">
+<h2 class="text-sm font-bold text-slate-800 mb-2">환영합니다! 👋</h2>
+<p class="text-xs text-slate-500 leading-relaxed">
+                            편안한 휴식을 위해 준비된 공간입니다. 머무시는 동안 불편함이 없도록 아래 가이드를 참고해주세요.
+                        </p>
+</div>
+<!-- Add Button Overlay -->
+<div class="h-4 w-full relative group/add flex items-center justify-center -my-2 z-10 hover:z-20">
+<div class="w-[90%] h-0.5 bg-primary opacity-0 group-hover/add:opacity-100 transition-opacity"></div>
+<button class="absolute bg-primary text-white rounded-full p-0.5 opacity-0 group-hover/add:opacity-100 transition-all shadow-sm transform scale-0 group-hover/add:scale-100">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+<!-- SELECTED BLOCK: Wi-Fi -->
+<div class="bg-white p-5 border-2 border-primary relative shadow-md z-10">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider shadow-sm">
+                            Editing
+                        </div>
+<div class="flex items-start gap-3">
+<div class="size-10 rounded-lg bg-blue-50 text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined">wifi</span>
+</div>
+<div class="flex-1">
+<h3 class="text-sm font-bold text-slate-800">Wi-Fi 연결</h3>
+<div class="mt-3 space-y-2">
+<div class="flex justify-between items-center p-2.5 bg-slate-50 rounded border border-slate-100">
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 uppercase">ID</span>
+<span class="text-xs font-semibold text-slate-700">Jeju_Ocean_5G</span>
+</div>
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined text-[18px]">content_copy</span></button>
+</div>
+<div class="flex justify-between items-center p-2.5 bg-slate-50 rounded border border-slate-100">
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 uppercase">PW</span>
+<span class="text-xs font-semibold text-slate-700">ocean1234!</span>
+</div>
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined text-[18px]">content_copy</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Drag Handle -->
+<div class="absolute -right-3 top-1/2 -translate-y-1/2 bg-white border border-slate-200 shadow-sm p-1 rounded cursor-grab hover:text-primary text-slate-400">
+<span class="material-symbols-outlined text-[16px]">drag_indicator</span>
+</div>
+</div>
+<!-- Add Button Overlay -->
+<div class="h-4 w-full relative group/add flex items-center justify-center -my-2 z-10 hover:z-20">
+<div class="w-[90%] h-0.5 bg-primary opacity-0 group-hover/add:opacity-100 transition-opacity"></div>
+<button class="absolute bg-primary text-white rounded-full p-0.5 opacity-0 group-hover/add:opacity-100 transition-all shadow-sm transform scale-0 group-hover/add:scale-100">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+<!-- Map Block -->
+<div class="bg-white p-5 group/block hover:ring-2 hover:ring-blue-300 relative">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-slate-400">location_on</span>
+<h3 class="text-sm font-bold text-slate-800">오시는 길</h3>
+</div>
+<div class="w-full h-32 bg-slate-100 rounded-lg overflow-hidden relative">
+<img alt="Map Preview" class="w-full h-full object-cover opacity-80 grayscale" data-alt="Minimalist map interface showing streets and location marker" data-location="Jeju Island" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXLZVlvmqAg9CJgOtM2-i61T2sLkl1yZ5bosTQBR-J3HgTTOfn_LI6CBDgxoEiOIzvxEqDDHohGzJC7FKJlHZ2ZdFeS5Ix44WFax2qmfg-9U1dBCALBsO39qU6vUPO91lNWf6XVkDKPlwLQfzj09Rz9PlLLGZlXcssifw8UtoJHGj3rw2-8kEGc-y7u7r9CB9N7KRqfru6hrw4lSX2fgHHsW50znezMKCmfYvbSrje5uO3UJCeVFaMTKlm5cNiWnzWhYyt_li_moE"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-white/90 p-2 rounded-full shadow-md text-primary animate-bounce">
+<span class="material-symbols-outlined text-[20px]">location_on</span>
+</div>
+</div>
+</div>
+<p class="mt-2 text-xs text-slate-500">제주특별자치도 서귀포시 성산읍</p>
+</div>
+<!-- Footer Space -->
+<div class="h-20 flex items-center justify-center text-[10px] text-slate-300">
+                        Powered by GuideBuilder
+                     </div>
+</div>
+<!-- Bottom Bar Indicator -->
+<div class="absolute bottom-1 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-slate-900 dark:bg-slate-700 rounded-full z-20"></div>
+</div>
+</main>
+<!-- Right Sidebar: Properties Panel -->
+<aside class="w-[300px] bg-white dark:bg-[#1e293b] border-l border-border-light dark:border-border-dark flex flex-col shrink-0 z-10">
+<!-- Header -->
+<div class="px-5 py-4 border-b border-border-light dark:border-border-dark flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">wifi</span>
+<h2 class="font-semibold text-sm text-slate-800 dark:text-white">Wi-Fi 설정</h2>
+</div>
+<div class="flex gap-1">
+<button class="text-slate-400 hover:text-red-500 transition-colors" title="Delete Block">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+<button class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors" title="Duplicate">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-5 space-y-6">
+<!-- Section: Content -->
+<div class="space-y-4">
+<h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">콘텐츠 입력</h3>
+<div class="space-y-1.5">
+<label class="text-xs font-medium text-slate-600 dark:text-slate-300">제목</label>
+<input class="w-full text-sm rounded-lg border-border-light dark:border-border-dark bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-primary focus:border-primary py-2" type="text" value="Wi-Fi 연결"/>
+</div>
+<div class="space-y-1.5">
+<label class="text-xs font-medium text-slate-600 dark:text-slate-300">네트워크 이름 (SSID)</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-slate-400 text-[18px]">router</span>
+<input class="w-full text-sm rounded-lg border-border-light dark:border-border-dark bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-primary focus:border-primary pl-9 py-2" type="text" value="Jeju_Ocean_5G"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-xs font-medium text-slate-600 dark:text-slate-300">비밀번호</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-slate-400 text-[18px]">lock</span>
+<input class="w-full text-sm rounded-lg border-border-light dark:border-border-dark bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-primary focus:border-primary pl-9 py-2" type="text" value="ocean1234!"/>
+<button class="absolute right-2.5 top-2 text-slate-400 hover:text-slate-600"><span class="material-symbols-outlined text-[18px]">visibility_off</span></button>
+</div>
+</div>
+<div class="flex items-center justify-between py-1">
+<label class="text-xs font-medium text-slate-600 dark:text-slate-300">QR코드 자동 생성</label>
+<button class="w-9 h-5 bg-primary rounded-full relative transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+<span class="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-transform"></span>
+</button>
+</div>
+</div>
+<hr class="border-border-light dark:border-border-dark"/>
+<!-- Section: Style -->
+<div class="space-y-4">
+<h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">스타일 설정</h3>
+<!-- Icon Selector -->
+<div class="space-y-2">
+<label class="text-xs font-medium text-slate-600 dark:text-slate-300">아이콘</label>
+<div class="flex gap-2">
+<button class="size-9 rounded-lg bg-blue-50 border border-primary text-primary flex items-center justify-center hover:bg-blue-100 transition-colors">
+<span class="material-symbols-outlined text-[20px]">wifi</span>
+</button>
+<button class="size-9 rounded-lg bg-slate-50 border border-border-light dark:border-border-dark dark:bg-slate-800 text-slate-500 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[20px]">cell_tower</span>
+</button>
+<button class="size-9 rounded-lg bg-slate-50 border border-border-light dark:border-border-dark dark:bg-slate-800 text-slate-500 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[20px]">signal_cellular_alt</span>
+</button>
+<button class="size-9 rounded-lg bg-slate-50 border border-border-light dark:border-border-dark dark:bg-slate-800 text-slate-500 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+<!-- Color Picker -->
+<div class="space-y-2">
+<label class="text-xs font-medium text-slate-600 dark:text-slate-300">강조 색상</label>
+<div class="flex gap-2 flex-wrap">
+<button class="size-6 rounded-full bg-primary ring-2 ring-offset-2 ring-primary"></button>
+<button class="size-6 rounded-full bg-red-500 hover:ring-2 hover:ring-offset-2 hover:ring-red-500 transition-all"></button>
+<button class="size-6 rounded-full bg-green-500 hover:ring-2 hover:ring-offset-2 hover:ring-green-500 transition-all"></button>
+<button class="size-6 rounded-full bg-amber-500 hover:ring-2 hover:ring-offset-2 hover:ring-amber-500 transition-all"></button>
+<button class="size-6 rounded-full bg-slate-800 hover:ring-2 hover:ring-offset-2 hover:ring-slate-800 transition-all"></button>
+<button class="size-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 hover:ring-2 hover:ring-offset-2 hover:ring-purple-500 transition-all"></button>
+</div>
+</div>
+<!-- Alignment -->
+<div class="space-y-2">
+<label class="text-xs font-medium text-slate-600 dark:text-slate-300">정렬</label>
+<div class="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
+<button class="flex-1 py-1 rounded bg-white dark:bg-slate-600 shadow-sm text-slate-800 dark:text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">format_align_left</span>
+</button>
+<button class="flex-1 py-1 rounded text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">format_align_center</span>
+</button>
+<button class="flex-1 py-1 rounded text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">format_align_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Action -->
+<div class="p-5 border-t border-border-light dark:border-border-dark bg-slate-50 dark:bg-slate-900/50">
+<button class="w-full py-2.5 rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm">
+                    설정 초기화
+                </button>
+</div>
+</aside>
+</div>
+</body></html>

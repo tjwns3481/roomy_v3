@@ -1,0 +1,131 @@
+# 바텀시트 컴포넌트 명세
+version: "2.0"
+
+screen:
+  id: bottomsheet
+  name: 바텀시트
+  route: null  # component
+  layout: bottomsheet
+  design_reference: design/06-wifi-bottomsheet.html
+
+data_requirements:
+  - resource: guide
+    needs: [wifi_ssid, wifi_password, content_blocks]
+    dynamic: true  # 타입에 따라 다른 데이터
+
+components:
+  - id: bottomsheet_container
+    type: bottomsheet
+    position: bottom
+    function: 바텀시트 컨테이너
+    props:
+      height: auto
+      maxHeight: 60vh
+      draggable: true
+
+  - id: drag_handle
+    type: handle
+    position: sheet-top
+    function: 드래그 핸들
+
+  - id: sheet_header
+    type: header
+    position: sheet-top
+    function: 바텀시트 헤더
+    children:
+      - id: icon
+        type: icon
+        function: 타입별 아이콘
+      - id: title
+        type: heading
+        function: 바텀시트 제목
+
+  # Wi-Fi 타입
+  - id: wifi_content
+    type: container
+    position: sheet-body
+    condition: type === 'wifi'
+    function: Wi-Fi 정보 콘텐츠
+    children:
+      - id: network_name
+        type: info-row
+        props:
+          label: 네트워크 이름
+          value: guide.wifi_ssid
+      - id: password
+        type: info-row
+        props:
+          label: 비밀번호
+          value: guide.wifi_password
+          masked: true
+          copyable: true
+      - id: copy_password_button
+        type: button
+        props:
+          variant: primary
+          fullWidth: true
+          icon: copy
+          text: 비밀번호 복사
+
+  # 연락처 타입
+  - id: contact_content
+    type: container
+    position: sheet-body
+    condition: type === 'contact'
+    function: 연락처 정보 콘텐츠
+    children:
+      - id: phone_number
+        type: info-row
+        props:
+          label: 전화번호
+          value: guide.contact.phone
+          action: call
+      - id: call_button
+        type: button
+        props:
+          variant: primary
+          fullWidth: true
+          icon: phone
+          text: 전화하기
+
+  - id: footer_help
+    type: text
+    position: sheet-footer
+    function: 도움말 텍스트
+    props:
+      text: 연결이 안 되시나요?
+      variant: helper
+    children:
+      - id: contact_host_link
+        type: link
+        props:
+          text: 호스트에게 문의하기
+
+events:
+  - trigger: copy_password_button.click
+    action: clipboard.copy
+    params: { text: guide.wifi_password }
+    on_success: show_toast("복사되었습니다")
+
+  - trigger: call_button.click
+    action: phone.call
+    params: { number: guide.contact.phone }
+
+  - trigger: bottomsheet_container.swipeDown
+    action: close_bottomsheet
+
+  - trigger: backdrop.click
+    action: close_bottomsheet
+
+tests:
+  - name: Wi-Fi 복사
+    when: 복사 버튼 클릭
+    then: [클립보드에 비밀번호 복사, 토스트 표시]
+
+  - name: 전화 걸기
+    when: 전화하기 버튼 클릭
+    then: [전화 앱 연결]
+
+  - name: 닫기
+    when: 아래로 스와이프
+    then: [바텀시트 닫힘]

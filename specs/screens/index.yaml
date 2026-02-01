@@ -1,0 +1,79 @@
+# Roomy v3 - Screen Index
+# 화면 목록 및 design/ HTML 파일 매핑
+
+version: "2.0"
+
+screens:
+  # 인증 (Auth)
+  auth:
+    - id: login
+      route: /login
+      design: design/04-login.html
+    - id: signup
+      route: /signup
+      design: design/08-signup.html
+    - id: forgot-password
+      route: /forgot-password
+      design: null  # 미생성
+
+  # 호스트 (Host)
+  host:
+    - id: dashboard
+      route: /dashboard
+      design: design/03-dashboard.html
+    - id: editor
+      route: /editor/:guideId
+      design: design/01-block-editor.html
+    - id: template-select
+      route: /templates
+      design: design/09-template-select.html
+    - id: settings
+      route: /settings
+      design: design/10-settings.html
+    - id: qr-modal
+      route: null  # modal
+      design: design/07-qr-modal.html
+    - id: pricing
+      route: /pricing
+      design: null  # 미생성
+
+  # 게스트 (Guest)
+  guest:
+    - id: guest-main
+      route: /g/:slug
+      design: design/02-guest-main.html
+    - id: story-viewer
+      route: null  # overlay
+      design: design/11-story-viewer.html
+    - id: bottomsheet
+      route: null  # component
+      design: design/06-wifi-bottomsheet.html
+    - id: detail-rules
+      route: /g/:slug/rules
+      design: design/12-house-rules.html
+    - id: detail-places
+      route: /g/:slug/places
+      design: design/13-local-map.html
+    - id: ai-chatbot
+      route: null  # overlay/bottomsheet
+      design: design/05-ai-chatbot.html
+
+  # 관리자 (Admin)
+  admin:
+    - id: admin-dashboard
+      route: /admin
+      design: design/14-admin-dashboard.html
+    - id: admin-users
+      route: /admin/users
+      design: null  # 미생성
+    - id: admin-guides
+      route: /admin/guides
+      design: null  # 미생성
+    - id: admin-ai-logs
+      route: /admin/ai-logs
+      design: null  # 미생성
+
+summary:
+  total: 18
+  with_design: 14
+  pending: 4

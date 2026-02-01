@@ -1,0 +1,100 @@
+# Roomy v3 - Domain Resources
+# 화면 명세에서 참조하는 도메인 리소스 정의
+
+version: "1.0"
+
+resources:
+  # 사용자
+  user:
+    fields:
+      - id: UUID
+      - email: string
+      - name: string
+      - role: enum[host, admin]
+      - created_at: timestamp
+      - updated_at: timestamp
+
+  # 숙소
+  accommodation:
+    fields:
+      - id: UUID
+      - user_id: UUID
+      - name: string
+      - address: string
+      - created_at: timestamp
+      - updated_at: timestamp
+    relations:
+      - user: belongs_to
+      - guides: has_many
+
+  # 가이드
+  guide:
+    fields:
+      - id: UUID
+      - accommodation_id: UUID
+      - slug: string
+      - title: string
+      - content_blocks: jsonb
+      - wifi_ssid: string
+      - wifi_password: string
+      - is_published: boolean
+      - view_count: integer
+      - created_at: timestamp
+      - updated_at: timestamp
+    relations:
+      - accommodation: belongs_to
+      - stories: has_many
+      - ai_conversations: has_many
+      - visits: has_many
+
+  # 스토리
+  story:
+    fields:
+      - id: UUID
+      - guide_id: UUID
+      - media_url: string
+      - media_type: enum[image, video]
+      - order_index: integer
+      - created_at: timestamp
+    relations:
+      - guide: belongs_to
+
+  # AI 대화
+  ai_conversation:
+    fields:
+      - id: UUID
+      - guide_id: UUID
+      - session_id: string
+      - question: string
+      - answer: string
+      - created_at: timestamp
+    relations:
+      - guide: belongs_to
+
+  # 방문 기록
+  visit:
+    fields:
+      - id: UUID
+      - guide_id: UUID
+      - visitor_ip: string
+      - user_agent: string
+      - created_at: timestamp
+    relations:
+      - guide: belongs_to
+
+# 콘텐츠 블록 타입
+block_types:
+  wifi:
+    fields: [ssid, password, note]
+  rules:
+    fields: [checkIn, checkOut, items]
+  devices:
+    fields: [items[name, description, imageUrl]]
+  places:
+    fields: [items[name, category, address, mapUrl]]
+  text:
+    fields: [title, content]
+  image:
+    fields: [url, caption]
+  video:
+    fields: [url, caption]

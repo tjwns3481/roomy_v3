@@ -1,0 +1,139 @@
+# 이용규칙 상세 페이지 명세
+version: "2.0"
+
+screen:
+  id: detail-rules
+  name: 이용규칙 상세
+  route: /g/:slug/rules
+  layout: mobile-page
+  design_reference: design/12-house-rules.html
+
+data_requirements:
+  - resource: guide
+    needs: [content_blocks]
+    filters: { slug: params.slug }
+    extract: content_blocks.filter(b => b.type === 'rules')
+
+components:
+  - id: page_header
+    type: header
+    position: top
+    function: 페이지 헤더
+    children:
+      - id: back_button
+        type: button
+        props:
+          icon: arrow-left
+          variant: ghost
+      - id: title
+        type: text
+        props:
+          text: 이용 규칙
+
+  - id: checkin_section
+    type: card
+    position: main
+    function: 체크인/체크아웃 섹션
+    children:
+      - id: checkin_icon
+        type: icon
+        props:
+          icon: clock
+      - id: checkin_time
+        type: info-row
+        props:
+          label: 체크인
+          value: "{rules.checkIn} 이후"
+      - id: checkout_time
+        type: info-row
+        props:
+          label: 체크아웃
+          value: "{rules.checkOut}까지"
+      - id: early_note
+        type: text
+        props:
+          text: 얼리체크인/레이트체크아웃은 문의해주세요
+          variant: helper
+
+  - id: basic_rules_section
+    type: card
+    position: main
+    function: 기본 규칙 섹션
+    children:
+      - id: rules_list
+        type: list
+        data_source:
+          field: rules.items
+        children:
+          - id: rule_item
+            type: list-item
+            props:
+              icon: dynamic  # 금연, 반려동물 등에 따라
+              text: rule.text
+
+  - id: facilities_section
+    type: card
+    position: main
+    function: 시설 이용 안내
+    children:
+      - id: pool_hours
+        type: info-row
+        props:
+          icon: swimming-pool
+          label: 수영장
+          value: "09:00 - 22:00"
+      - id: bbq_info
+        type: info-row
+        props:
+          icon: grill
+          label: 바베큐
+          value: 사용법 안내
+
+  - id: checkout_checklist
+    type: card
+    position: main
+    function: 퇴실 시 체크리스트
+    children:
+      - id: checklist_title
+        type: heading
+        props:
+          text: 퇴실 시 부탁드립니다
+      - id: checklist_items
+        type: checklist
+        items:
+          - 사용한 식기류 설거지
+          - 쓰레기 분리수거
+          - 창문/문 잠금 확인
+          - 에어컨/난방 끄기
+
+  - id: contact_footer
+    type: footer
+    position: bottom-fixed
+    function: 문의 영역
+    children:
+      - id: help_text
+        type: text
+        props:
+          text: 문의사항이 있으신가요?
+      - id: contact_button
+        type: button
+        props:
+          variant: primary
+          fullWidth: true
+          text: 호스트에게 연락하기
+
+events:
+  - trigger: back_button.click
+    action: navigate_back
+
+  - trigger: contact_button.click
+    action: phone.call
+
+tests:
+  - name: 페이지 로드
+    when: 이용규칙 메뉴 클릭
+    then: [규칙 데이터 표시]
+
+  - name: 뒤로가기
+    when: 뒤로가기 버튼 클릭
+    then: [게스트 메인으로 이동]

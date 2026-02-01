@@ -1,0 +1,141 @@
+# 블록 에디터 화면 명세
+version: "2.0"
+
+screen:
+  id: editor
+  name: 블록 에디터
+  route: /editor/:guideId
+  layout: fullscreen-editor
+  auth_required: true
+  design_reference: design/01-block-editor.html
+
+data_requirements:
+  - resource: guide
+    needs: [id, title, slug, content_blocks, wifi_ssid, wifi_password, is_published]
+    filters: { id: params.guideId }
+
+  - resource: story
+    needs: [id, media_url, media_type, order_index]
+    filters: { guide_id: params.guideId }
+
+components:
+  - id: top_bar
+    type: header
+    position: top
+    function: 에디터 상단 바
+    children:
+      - id: back_button
+        type: button
+        function: 대시보드로 돌아가기
+        props:
+          icon: arrow-left
+          variant: ghost
+      - id: guide_title
+        type: editable-text
+        function: 가이드 제목 (클릭 수정)
+        data_source:
+          resource: guide
+          field: title
+      - id: save_status
+        type: badge
+        function: 자동저장 상태 표시
+      - id: device_toggle
+        type: toggle-group
+        function: 모바일/데스크탑 전환
+      - id: preview_button
+        type: button
+        function: 미리보기 모달 열기
+      - id: publish_button
+        type: button
+        function: 발행/QR 생성
+        props:
+          variant: primary
+
+  - id: block_sidebar
+    type: sidebar
+    position: left
+    function: 블록 팔레트
+    children:
+      - id: block_category
+        type: accordion
+        function: 블록 카테고리 (기본정보, 콘텐츠, 위치)
+      - id: block_items
+        type: draggable-list
+        function: 드래그 가능한 블록 아이콘들
+        items:
+          - { type: wifi, icon: wifi, label: Wi-Fi }
+          - { type: rules, icon: clipboard, label: 이용수칙 }
+          - { type: devices, icon: home, label: 시설안내 }
+          - { type: contact, icon: phone, label: 연락처 }
+          - { type: story, icon: book, label: 스토리 }
+          - { type: gallery, icon: image, label: 갤러리 }
+          - { type: text, icon: type, label: 텍스트 }
+          - { type: map, icon: map, label: 지도 }
+
+  - id: canvas
+    type: canvas
+    position: center
+    function: 모바일 프레임 + 블록 편집 영역
+    children:
+      - id: device_frame
+        type: device-mockup
+        function: 아이폰 목업 프레임
+      - id: block_list
+        type: sortable-list
+        function: 블록 리스트 (드래그 정렬)
+        data_source:
+          resource: guide
+          field: content_blocks
+      - id: add_block_button
+        type: button
+        function: 블록 사이 추가 버튼
+        props:
+          icon: plus
+          variant: ghost
+
+  - id: property_panel
+    type: sidebar
+    position: right
+    function: 선택된 블록 속성 편집
+    condition: selectedBlock !== null
+    children:
+      - id: block_settings
+        type: form
+        function: 블록별 설정 폼
+        dynamic: true  # 블록 타입에 따라 폼 변경
+
+events:
+  - trigger: back_button.click
+    action: navigate(/dashboard)
+
+  - trigger: guide_title.change
+    action: guide.updateTitle
+    debounce: 500ms
+
+  - trigger: block_list.change
+    action: guide.updateBlocks
+    auto_save: true
+
+  - trigger: preview_button.click
+    action: open_modal(preview-modal)
+
+  - trigger: publish_button.click
+    action: guide.publish
+    on_success: open_modal(qr-modal)
+
+tests:
+  - name: 에디터 로드
+    when: 가이드 ID로 접속
+    then: [가이드 데이터 로드, 블록 표시]
+
+  - name: 블록 추가
+    when: 사이드바에서 블록 드래그
+    then: [캔버스에 블록 추가, 자동 저장]
+
+  - name: 블록 순서 변경
+    when: 블록 드래그 앤 드롭
+    then: [순서 변경, 자동 저장]
+
+  - name: 발행
+    when: 발행 버튼 클릭
+    then: [is_published=true, QR 모달 표시]

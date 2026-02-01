@@ -1,0 +1,109 @@
+# 로그인 화면 명세
+version: "2.0"
+
+screen:
+  id: login
+  name: 로그인
+  route: /login
+  layout: center-card
+  design_reference: design/04-login.html
+
+data_requirements: []  # 인증 전 화면
+
+components:
+  - id: login_card
+    type: card
+    position: center
+    function: 로그인 폼 컨테이너
+
+  - id: logo
+    type: image
+    position: card-header
+    function: Roomy 로고 표시
+
+  - id: email_input
+    type: input
+    position: card-body
+    function: 이메일 입력
+    props:
+      type: email
+      placeholder: 이메일
+      required: true
+
+  - id: password_input
+    type: input
+    position: card-body
+    function: 비밀번호 입력
+    props:
+      type: password
+      placeholder: 비밀번호
+      required: true
+
+  - id: login_button
+    type: button
+    position: card-body
+    function: 로그인 실행
+    props:
+      variant: primary
+      fullWidth: true
+
+  - id: forgot_password_link
+    type: link
+    position: card-body
+    function: 비밀번호 찾기 이동
+
+  - id: social_divider
+    type: divider
+    position: card-body
+    function: 소셜 로그인 구분선
+    props:
+      text: 또는
+
+  - id: google_login
+    type: button
+    position: card-body
+    function: Google 소셜 로그인
+    props:
+      variant: outline
+      icon: google
+
+  - id: kakao_login
+    type: button
+    position: card-body
+    function: Kakao 소셜 로그인
+    props:
+      variant: kakao
+      icon: kakao
+
+  - id: signup_link
+    type: link
+    position: card-footer
+    function: 회원가입 이동
+
+events:
+  - trigger: login_button.click
+    action: auth.login
+    params: { email: email_input.value, password: password_input.value }
+    on_success: navigate(/dashboard)
+    on_error: show_toast(error.message)
+
+  - trigger: google_login.click
+    action: auth.socialLogin
+    params: { provider: google }
+
+  - trigger: kakao_login.click
+    action: auth.socialLogin
+    params: { provider: kakao }
+
+tests:
+  - name: 이메일 로그인 성공
+    when: 유효한 자격증명 입력 후 로그인 클릭
+    then: [대시보드로 이동]
+
+  - name: 소셜 로그인
+    when: Google 버튼 클릭
+    then: [OAuth 팝업 열림]
+
+  - name: 유효성 검사
+    when: 빈 이메일로 로그인 시도
+    then: [에러 메시지 표시]

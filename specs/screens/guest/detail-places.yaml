@@ -1,0 +1,151 @@
+# 주변 맛집/명소 상세 페이지 명세
+version: "2.0"
+
+screen:
+  id: detail-places
+  name: 주변 맛집
+  route: /g/:slug/places
+  layout: map-list
+  design_reference: design/13-local-map.html
+
+data_requirements:
+  - resource: guide
+    needs: [content_blocks]
+    filters: { slug: params.slug }
+    extract: content_blocks.filter(b => b.type === 'places')
+
+  - resource: accommodation
+    needs: [address, latitude, longitude]
+    via: guide.accommodation_id
+
+components:
+  - id: page_header
+    type: header
+    position: top
+    function: 페이지 헤더
+    children:
+      - id: back_button
+        type: button
+        props:
+          icon: arrow-left
+          variant: ghost
+      - id: title
+        type: text
+        props:
+          text: 주변 맛집
+      - id: filter_button
+        type: button
+        props:
+          icon: filter
+          variant: ghost
+
+  - id: map_view
+    type: map
+    position: top-half
+    function: 지도 영역
+    props:
+      height: 40vh
+      provider: naver  # 또는 kakao
+    children:
+      - id: accommodation_marker
+        type: marker
+        props:
+          icon: home
+          position: accommodation.coordinates
+          label: 숙소
+      - id: place_markers
+        type: marker-group
+        data_source:
+          field: places.items
+        props:
+          numbered: true
+
+  - id: current_location_button
+    type: fab
+    position: map-bottom-right
+    function: 현재 위치 버튼
+    props:
+      icon: crosshairs
+
+  - id: places_list
+    type: scrollable-list
+    position: bottom-half
+    function: 맛집 리스트
+    data_source:
+      field: places.items
+    children:
+      - id: place_card
+        type: card
+        function: 맛집 카드
+        props:
+          horizontal: true
+        children:
+          - id: place_thumbnail
+            type: image
+            props:
+              size: 80x80
+              rounded: true
+          - id: place_info
+            type: container
+            children:
+              - id: host_badge
+                type: badge
+                condition: place.isHostPick
+                props:
+                  text: "🏆 호스트 추천"
+                  variant: gold
+              - id: place_name
+                type: heading
+                props:
+                  size: sm
+              - id: place_rating
+                type: rating
+                props:
+                  value: place.rating
+                  reviews: place.reviewCount
+              - id: place_distance
+                type: text
+                props:
+                  icon: map-pin
+                  text: "{place.distance}"
+              - id: place_category
+                type: tag-group
+                props:
+                  tags: place.categories
+          - id: directions_button
+            type: button
+            props:
+              text: 길찾기
+              variant: outline
+              size: sm
+
+events:
+  - trigger: back_button.click
+    action: navigate_back
+
+  - trigger: place_card.click
+    action: map.focusMarker
+    params: { markerId: place.id }
+
+  - trigger: directions_button.click
+    action: map.openDirections
+    params: { destination: place.address }
+
+  - trigger: current_location_button.click
+    action: map.centerOnUser
+
+  - trigger: filter_button.click
+    action: open_bottomsheet(filter-options)
+
+tests:
+  - name: 지도 표시
+    when: 페이지 로드
+    then: [숙소 마커, 맛집 마커 표시]
+
+  - name: 길찾기
+    when: 길찾기 버튼 클릭
+    then: [지도 앱으로 연결]
+
+  - name: 카드 클릭
+    when: 맛집 카드 클릭
+    then: [지도에서 해당 마커 포커스]

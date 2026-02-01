@@ -1,0 +1,169 @@
+# 관리자 대시보드 명세
+version: "2.0"
+
+screen:
+  id: admin-dashboard
+  name: 관리자 대시보드
+  route: /admin
+  layout: sidebar-main
+  auth_required: true
+  role_required: admin
+  design_reference: design/14-admin-dashboard.html
+
+data_requirements:
+  - resource: user
+    needs: [id, email, created_at]
+    aggregate: [count, count_today]
+
+  - resource: guide
+    needs: [id, title, is_published, view_count]
+    aggregate: [count, sum(view_count)]
+
+  - resource: visit
+    needs: [id, created_at]
+    aggregate: [count_today]
+
+  - resource: ai_conversation
+    needs: [id, created_at]
+    aggregate: [count_today]
+
+components:
+  - id: admin_sidebar
+    type: sidebar
+    position: left
+    function: 관리자 사이드바
+    props:
+      theme: dark
+    children:
+      - id: logo
+        type: image
+        props:
+          src: logo-white.svg
+          badge: Admin
+      - id: nav_menu
+        type: nav-list
+        items:
+          - { id: dashboard, icon: chart-bar, label: 대시보드, active: true }
+          - { id: users, icon: users, label: 사용자 관리 }
+          - { id: guides, icon: book, label: 가이드 관리 }
+          - { id: ai-logs, icon: robot, label: AI 로그 }
+          - { id: settings, icon: cog, label: 시스템 설정 }
+
+  - id: main_header
+    type: header
+    position: main-top
+    function: 메인 헤더
+    children:
+      - id: search_bar
+        type: search
+        props:
+          placeholder: 사용자, 가이드 검색...
+      - id: admin_profile
+        type: dropdown
+        function: 관리자 프로필
+
+  - id: stats_grid
+    type: grid
+    position: main
+    function: 통계 카드 그리드
+    props:
+      columns: 4
+    children:
+      - id: total_users_card
+        type: stat-card
+        props:
+          title: 총 사용자
+          value: "{users.count}"
+          change: "+12%"
+          icon: users
+      - id: total_guides_card
+        type: stat-card
+        props:
+          title: 총 가이드
+          value: "{guides.count}"
+          change: "+8%"
+          icon: book
+      - id: today_scans_card
+        type: stat-card
+        props:
+          title: 오늘 QR 스캔
+          value: "{visits.count_today}"
+          icon: qrcode
+      - id: ai_questions_card
+        type: stat-card
+        props:
+          title: AI 질문 수
+          value: "{ai_conversations.count_today}"
+          icon: message-circle
+
+  - id: charts_row
+    type: grid
+    position: main
+    function: 차트 영역
+    props:
+      columns: 2
+    children:
+      - id: signups_chart
+        type: line-chart
+        props:
+          title: 일별 가입자 추이
+          data: users.daily_signups
+      - id: guide_types_chart
+        type: pie-chart
+        props:
+          title: 가이드 유형 분포
+          data: guides.by_type
+
+  - id: recent_activity_table
+    type: table
+    position: main
+    function: 최근 활동 테이블
+    props:
+      title: 최근 활동
+      columns:
+        - { key: time, label: 시간 }
+        - { key: user, label: 사용자 }
+        - { key: activity, label: 활동 }
+        - { key: status, label: 상태 }
+
+  - id: quick_actions
+    type: card
+    position: main-sidebar
+    function: 빠른 작업
+    children:
+      - id: pending_approvals
+        type: alert-item
+        props:
+          icon: user-plus
+          text: 신규 가입 승인 대기
+          count: 3
+      - id: reported_guides
+        type: alert-item
+        props:
+          icon: flag
+          text: 신고된 가이드
+          count: 1
+          variant: warning
+
+events:
+  - trigger: nav_menu.click
+    action: navigate(/admin/{menu.id})
+
+  - trigger: pending_approvals.click
+    action: navigate(/admin/users?filter=pending)
+
+  - trigger: reported_guides.click
+    action: navigate(/admin/guides?filter=reported)
+
+tests:
+  - name: 대시보드 로드
+    when: 관리자 로그인 후 접속
+    then: [통계 데이터 표시, 차트 렌더링]
+
+  - name: 메뉴 이동
+    when: 사용자 관리 메뉴 클릭
+    then: [사용자 목록 페이지로 이동]
+
+  - name: 빠른 작업
+    when: 신고된 가이드 클릭
+    then: [필터링된 가이드 목록으로 이동]

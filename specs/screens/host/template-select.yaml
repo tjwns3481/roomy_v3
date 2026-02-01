@@ -1,0 +1,79 @@
+# 템플릿 선택 화면 명세
+version: "2.0"
+
+screen:
+  id: template-select
+  name: 템플릿 선택
+  route: /templates
+  layout: header-main
+  auth_required: true
+  design_reference: design/09-template-select.html
+
+data_requirements:
+  - resource: template
+    needs: [id, name, thumbnail, category, is_available]
+    static: true  # 정적 데이터
+
+components:
+  - id: header
+    type: header
+    position: top
+    function: 네비게이션 헤더
+
+  - id: page_title
+    type: heading
+    position: main-top
+    function: 페이지 타이틀
+    props:
+      text: 템플릿을 선택하세요
+      subtitle: 숙소 유형에 맞는 템플릿으로 빠르게 시작하세요
+
+  - id: template_grid
+    type: grid
+    position: main
+    function: 템플릿 카드 그리드
+    props:
+      columns: 3
+    children:
+      - id: template_card
+        type: card
+        function: 템플릿 카드
+        props:
+          thumbnail: template.thumbnail
+          title: template.name
+          badge: template.is_popular ? "인기" : null
+          disabled: !template.is_available
+        actions:
+          - select: create_guide(template.id)
+
+  - id: blank_start_link
+    type: link
+    position: main-bottom
+    function: 빈 페이지로 시작
+    props:
+      text: 빈 페이지로 시작하기
+
+events:
+  - trigger: template_card.click
+    condition: template.is_available
+    action: guide.create
+    params: { template_id: template.id }
+    on_success: navigate(/editor/{newGuide.id})
+
+  - trigger: blank_start_link.click
+    action: guide.create
+    params: { template_id: null }
+    on_success: navigate(/editor/{newGuide.id})
+
+tests:
+  - name: 템플릿 선택
+    when: 사용 가능한 템플릿 클릭
+    then: [새 가이드 생성, 에디터로 이동]
+
+  - name: 비활성 템플릿
+    when: "준비중" 템플릿 클릭
+    then: [클릭 무시됨]
+
+  - name: 빈 페이지 시작
+    when: 하단 링크 클릭
+    then: [빈 가이드 생성, 에디터로 이동]

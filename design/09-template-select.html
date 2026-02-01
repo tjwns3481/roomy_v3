@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Roomy - Template Selection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b9dee",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                        "card-dark": "#1c2a36",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col text-[#111518] dark:text-white overflow-x-hidden">
+<!-- Header -->
+<header class="w-full bg-white dark:bg-card-dark border-b border-[#f0f3f4] dark:border-gray-800 px-6 py-4 sticky top-0 z-50">
+<div class="max-w-[1200px] mx-auto flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-8 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">home_app_logo</span>
+</div>
+<h2 class="text-primary text-xl font-bold leading-tight tracking-tight">Roomy</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 ring-2 ring-gray-100 dark:ring-gray-700" data-alt="User profile avatar showing a smiling person" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD6p5DOjhtSRtKksXvENbKwffQWLo8jF3p-haF0_5OKpwaobWzGa4FQyLNXUTZt3lbiwI8JniPO-YPVtcfSDUt9rw-qMcVuagzoxlZpohCiPcM9ee-rGHjhM_iqNPUvBLEyxV3mQ9mqzZJWcD7_icHG35shaccTRdss82vXd1eG_LYq0LlHY0ga6abMFZp6Q5yJWQza13zME1p6BpgJp6FEIZU4zazGQGYs8-5ki5eSPVDMlCqJDQNdYqz-cO1DSZm34OeWQwAgmRo");'>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 w-full max-w-[1200px] mx-auto px-6 py-12 flex flex-col items-center">
+<!-- Hero Section -->
+<div class="text-center max-w-2xl mx-auto mb-12">
+<h1 class="text-[#111518] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em] mb-3">
+                템플릿을 선택하세요
+            </h1>
+<p class="text-[#617989] dark:text-gray-400 text-lg font-normal leading-normal">
+                숙소 유형에 맞는 템플릿으로 빠르게 시작하세요
+            </p>
+</div>
+<!-- Template Grid -->
+<div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Card 1: Airbnb/Pension (Popular) -->
+<div class="group flex flex-col bg-white dark:bg-card-dark rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary/20 relative">
+<!-- Image Container -->
+<div class="relative w-full aspect-[3/4] overflow-hidden bg-gray-100 dark:bg-gray-800">
+<!-- Badge -->
+<div class="absolute top-3 left-3 z-10">
+<span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-primary text-white shadow-sm">
+<span class="material-symbols-outlined text-[14px] mr-1">local_fire_department</span>
+                            인기
+                        </span>
+</div>
+<div class="w-full h-full bg-cover bg-center transform group-hover:scale-105 transition-transform duration-500" data-alt="Mobile app preview of a cozy wooden interior pension guide" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCZalWO2jRFQ9PvYTFD8HWcDR3MwJNX-mcsKG0JcQSuJ8j6wQZzX-Qp64UwtZAWZlHlZQYRIgiB9rPx0tErZUXNhLNQ-3SN0uYZH1PciBA8KxTe2YbMKTiPvEbbavGldbakr7MBBAQvkXWQt8n3jmgX1QfAocD1Nf6EndtdHj8TAmI8DzP2fDoTjwqtcyGMQ7PHxah53hVPDR0rKcGAaYJ5YXP0KWYDWqIdZmXfOQ-YevPeTXjKra72uOQxld_AHBozXy9YXkLp3M4");'>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
+</div>
+</div>
+<!-- Content -->
+<div class="p-5 flex flex-col flex-1 gap-4">
+<div class="flex-1">
+<h3 class="text-lg font-bold text-[#111518] dark:text-white leading-tight">에어비앤비/펜션</h3>
+<p class="text-sm text-[#617989] dark:text-gray-400 mt-1">게스트를 위한 완벽한 숙소 가이드</p>
+</div>
+<button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-medium hover:bg-blue-600 transition-colors shadow-sm">
+<span>이 템플릿으로 시작</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 2: Pool Villa -->
+<div class="group flex flex-col bg-white dark:bg-card-dark rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary/20">
+<!-- Image Container -->
+<div class="relative w-full aspect-[3/4] overflow-hidden bg-gray-100 dark:bg-gray-800">
+<div class="w-full h-full bg-cover bg-center transform group-hover:scale-105 transition-transform duration-500" data-alt="Mobile app preview showing a luxurious pool villa with blue water" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDszYjrfZf0PHrD4ZCQpV658RDF0RQ4FUPHqZoklMuwWTz5Gux-6HKwC_YXi_59ha36g40XNncs07tonev8CSnX-Nhs3RlGJXeylAkZ7QaFlt5A5mW8pysv9-OzBpYN3qXWTEmpSVGmHGAA0nFMA05fjxbIoT91IJvFDITYrUbB9fMpIZ6VQaB3abbb_LCJLqxfXLmEPf_FtMLz_l1CLsl5ydl5HNnGbWimgulcLC7kmia5Zbg9IJAtzJfzoQB8Q1iuOAIiT8Fc1OU");'>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
+</div>
+</div>
+<!-- Content -->
+<div class="p-5 flex flex-col flex-1 gap-4">
+<div class="flex-1">
+<h3 class="text-lg font-bold text-[#111518] dark:text-white leading-tight">풀빌라/독채</h3>
+<p class="text-sm text-[#617989] dark:text-gray-400 mt-1">프라이빗한 휴식을 위한 안내서</p>
+</div>
+<button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-medium hover:bg-blue-600 transition-colors shadow-sm">
+<span>이 템플릿으로 시작</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 3: Glamping/Camping -->
+<div class="group flex flex-col bg-white dark:bg-card-dark rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary/20">
+<!-- Image Container -->
+<div class="relative w-full aspect-[3/4] overflow-hidden bg-gray-100 dark:bg-gray-800">
+<div class="w-full h-full bg-cover bg-center transform group-hover:scale-105 transition-transform duration-500" data-alt="Mobile app preview featuring a glamping tent in a forest setting" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDy-HFVOnwEyiZuNWAJLpGn_-zOAfBh679OQglsK_mTFk_BN0VbzbFtU7lwVJ_1fym3UXTo7IyYZW3t5HmiFEEHY-RSELKK6Ejr9OgxjGysz6S3c-vZeUJ-nw3xjooz6dvqfpeszauZ4s8SdMKFX-Wlaid1YCdNYED8xeQhSHzcz1QyGhjWMlzkr1mpdbS7hQycdLgdubRpX-87ICmuKeKEbbw_A-HaTv-J_a9F5uewAGftMdqyW-ivqRkzZQ0jmTxfW9IXQJfnCsA");'>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-60"></div>
+</div>
+</div>
+<!-- Content -->
+<div class="p-5 flex flex-col flex-1 gap-4">
+<div class="flex-1">
+<h3 class="text-lg font-bold text-[#111518] dark:text-white leading-tight">글램핑/캠핑</h3>
+<p class="text-sm text-[#617989] dark:text-gray-400 mt-1">자연 속 힐링을 돕는 가이드</p>
+</div>
+<button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-primary text-white text-sm font-medium hover:bg-blue-600 transition-colors shadow-sm">
+<span>이 템플릿으로 시작</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 4: Hotel/Resort (Coming Soon) -->
+<div class="group flex flex-col bg-white dark:bg-card-dark rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-800 opacity-75 select-none relative cursor-not-allowed">
+<!-- Overlay -->
+<div class="absolute inset-0 bg-white/50 dark:bg-black/50 z-20 flex items-center justify-center backdrop-blur-[2px]">
+<div class="bg-white/90 dark:bg-gray-800/90 px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-gray-500 text-sm">lock</span>
+<span class="text-gray-600 dark:text-gray-300 font-bold text-sm">준비중</span>
+</div>
+</div>
+<!-- Image Container -->
+<div class="relative w-full aspect-[3/4] overflow-hidden bg-gray-100 dark:bg-gray-800 grayscale">
+<div class="w-full h-full bg-cover bg-center" data-alt="Blurred image of a hotel lobby representing a coming soon feature" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAPIp8Np7ns-DtljxYFfdXvrwXYOUnY_cCxmc_PpkIOEP6HNVNsMxg_AFwKj3pOTK46gfMr7Wo1zTTfE0-qO75KeQu6ERh7zCmUg5JNznWCV7svA1rcJxN2tPtyBxzfLSlpCzdslokvmMIlJvVpOT76BonCosjyBirjHOxZJxWhAo7BhN4_kheOS1BeWfYq_MV8uxXPsfLWwT8bkhIAlpdydffpJsXDIv1tLPZ6U4XVQX1hAeEd9vnjNSsPdZSt2mxRs9EUnA8uoQY");'>
+</div>
+</div>
+<!-- Content -->
+<div class="p-5 flex flex-col flex-1 gap-4">
+<div class="flex-1">
+<h3 class="text-lg font-bold text-[#111518] dark:text-gray-400 leading-tight">호텔/리조트</h3>
+<p class="text-sm text-[#617989] dark:text-gray-500 mt-1">대규모 시설을 위한 통합 솔루션</p>
+</div>
+<button class="w-full flex items-center justify-center gap-2 rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 text-sm font-medium cursor-not-allowed" disabled="">
+<span>준비중입니다</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="mt-16 text-center">
+<a class="inline-flex items-center gap-1 text-[#617989] dark:text-gray-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors border-b border-transparent hover:border-primary" href="#">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+                빈 페이지로 시작하기
+            </a>
+</div>
+</main>
+</body></html>

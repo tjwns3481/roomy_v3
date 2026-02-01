@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wi-Fi Info Bottom Sheet</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b9dee",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hide for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display h-screen w-full overflow-hidden flex flex-col relative">
+<!-- Main Background (Simulated Guide Screen) -->
+<!-- This section represents the content "behind" the bottom sheet -->
+<div class="flex-1 w-full bg-cover bg-center relative" data-alt="Cozy interior of an ocean villa living room" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDdKvwVoFaXY2yvkAkQs6V5AqAc4jzUcupGKWDxHXPWyNbVk2Kf2yEPt6pGC8QL_t_6NjRGCPrExXgOzUfWIY9R6WFXI6UU-mxJM2aaluqFNqe66Ua9cK1c-MN8HAy7rFVWUkbs5dY7008fEE-rShMCGPXNl_uyz3ODnwdhzy433NkTfHwUrIRq5yEqYWUwdJhwumUyi03usgp9Hx9J1-WEWyFw3eX7nS2EoAlPADYtTPg7LO1GNsLtG0Om9piNuoqxFRhJ5GSgtmQ');">
+<!-- Mock Content for the background -->
+<div class="absolute inset-0 bg-black/10"></div>
+<div class="absolute top-12 left-6 right-6">
+<h1 class="text-3xl font-bold text-white mb-2 drop-shadow-md">Ocean Villa Guide</h1>
+<p class="text-white/90 drop-shadow-sm">Welcome to your stay in Jeju!</p>
+</div>
+<div class="absolute bottom-32 left-6 right-6 flex flex-col gap-4">
+<div class="bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gray-600">door_front</span>
+<span class="font-medium text-gray-800">Check-in Guide</span>
+</div>
+</div>
+<div class="bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gray-600">local_dining</span>
+<span class="font-medium text-gray-800">Local Food</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Dark Overlay -->
+<div class="absolute inset-0 bg-black/40 z-40 transition-opacity backdrop-blur-[2px]"></div>
+<!-- Bottom Sheet Container -->
+<!-- Fixed to bottom, rounded top corners -->
+<div class="absolute bottom-0 left-0 right-0 z-50 flex flex-col items-center justify-end">
+<!-- Sheet Content -->
+<div class="w-full max-w-md mx-auto bg-white dark:bg-[#1a2632] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] pb-8 pt-3 px-6 relative overflow-hidden transition-transform duration-300 ease-out translate-y-0">
+<!-- Drag Handle -->
+<div class="flex justify-center w-full mb-6">
+<div class="h-1.5 w-12 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+</div>
+<!-- Header -->
+<div class="flex items-center gap-3 mb-6">
+<div class="flex items-center justify-center rounded-full bg-primary/10 shrink-0 h-10 w-10 text-primary">
+<span class="material-symbols-outlined" style="font-size: 24px;">wifi</span>
+</div>
+<h2 class="text-[#111518] dark:text-white text-xl font-bold leading-tight">Wi-Fi 연결</h2>
+</div>
+<!-- Info Card -->
+<div class="bg-[#F3F4F6] dark:bg-[#232d38] rounded-2xl p-5 mb-6 border border-gray-100 dark:border-gray-700">
+<!-- Network Name -->
+<div class="flex flex-col mb-4">
+<span class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1.5">네트워크 이름</span>
+<div class="flex items-center justify-between">
+<span class="text-[#111518] dark:text-white text-lg font-semibold tracking-tight select-all">OceanVilla_5G</span>
+<span class="material-symbols-outlined text-gray-400" style="font-size: 20px;">signal_wifi_4_bar</span>
+</div>
+</div>
+<!-- Divider -->
+<div class="h-px bg-gray-200 dark:bg-gray-600 w-full mb-4"></div>
+<!-- Password -->
+<div class="flex flex-col">
+<span class="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1.5">비밀번호</span>
+<div class="flex items-center justify-between group cursor-pointer">
+<span class="text-[#111518] dark:text-white text-lg font-mono font-medium tracking-wide select-all">jeju2024!</span>
+<button class="flex items-center justify-center h-8 w-8 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined" style="font-size: 22px;">visibility</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-[#228bd6] active:bg-[#1e7bc0] text-white rounded-xl h-14 font-bold text-base shadow-sm transition-all active:scale-[0.98] mb-6">
+<span class="material-symbols-outlined" style="font-size: 20px;">content_copy</span>
+<span>비밀번호 복사</span>
+</button>
+<!-- Footer -->
+<div class="flex flex-col items-center justify-center gap-1 text-center pb-safe">
+<p class="text-gray-500 dark:text-gray-400 text-sm">연결이 안 되시나요?</p>
+<button class="text-primary font-medium text-sm hover:underline decoration-primary/50 underline-offset-4 flex items-center gap-1">
+                    호스트에게 문의하기
+                    <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
+</button>
+</div>
+<!-- Home Indicator Space (iOS Safe Area Simulation) -->
+<div class="h-6 w-full"></div>
+</div>
+</div>
+</body></html>

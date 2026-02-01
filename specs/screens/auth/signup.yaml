@@ -1,0 +1,104 @@
+# 회원가입 화면 명세
+version: "2.0"
+
+screen:
+  id: signup
+  name: 회원가입
+  route: /signup
+  layout: center-card
+  design_reference: design/08-signup.html
+
+data_requirements: []
+
+components:
+  - id: signup_card
+    type: card
+    position: center
+    function: 회원가입 폼 컨테이너
+
+  - id: logo
+    type: image
+    position: card-header
+    function: Roomy 로고
+
+  - id: title
+    type: text
+    position: card-header
+    function: 타이틀 표시
+    props:
+      text: 무료로 시작하기
+
+  - id: email_input
+    type: input
+    position: card-body
+    function: 이메일 입력
+    props:
+      type: email
+      placeholder: 이메일
+      required: true
+
+  - id: password_input
+    type: input
+    position: card-body
+    function: 비밀번호 입력
+    props:
+      type: password
+      placeholder: "비밀번호 (8자 이상)"
+      minLength: 8
+
+  - id: password_confirm_input
+    type: input
+    position: card-body
+    function: 비밀번호 확인
+    props:
+      type: password
+      placeholder: 비밀번호 확인
+
+  - id: terms_checkbox
+    type: checkbox
+    position: card-body
+    function: 이용약관 동의
+    props:
+      label: 이용약관 및 개인정보처리방침에 동의합니다
+      required: true
+
+  - id: signup_button
+    type: button
+    position: card-body
+    function: 가입 실행
+    props:
+      variant: primary
+      fullWidth: true
+      text: 가입하기
+
+  - id: social_signup
+    type: button-group
+    position: card-body
+    function: 소셜 가입 버튼들
+
+  - id: login_link
+    type: link
+    position: card-footer
+    function: 로그인 페이지 이동
+
+events:
+  - trigger: signup_button.click
+    action: auth.signup
+    validation:
+      - password_input.value === password_confirm_input.value
+      - terms_checkbox.checked === true
+    on_success: navigate(/templates)
+    on_error: show_toast(error.message)
+
+tests:
+  - name: 회원가입 성공
+    when: 유효한 정보 입력 후 가입
+    then: [템플릿 선택 페이지로 이동]
+
+  - name: 비밀번호 불일치
+    when: 비밀번호와 확인이 다를 때
+    then: [에러 메시지 표시]
+
+  - name: 약관 미동의
+    when: 체크박스 미체크 상태로 가입 시도
+    then: [가입 버튼 비활성화]

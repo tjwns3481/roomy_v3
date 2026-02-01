@@ -1,0 +1,130 @@
+# AI 챗봇 화면 명세
+version: "2.0"
+
+screen:
+  id: ai-chatbot
+  name: AI 챗봇
+  route: null  # overlay/bottomsheet
+  layout: chat-interface
+  design_reference: design/05-ai-chatbot.html
+
+data_requirements:
+  - resource: guide
+    needs: [id, title, content_blocks, wifi_ssid, wifi_password]
+    context: true  # AI 컨텍스트로 사용
+
+  - resource: ai_conversation
+    needs: [id, question, answer, created_at]
+    filters: { guide_id: guide.id, session_id: currentSession }
+    orderBy: created_at
+
+components:
+  - id: chat_container
+    type: bottomsheet
+    position: bottom
+    function: 챗봇 컨테이너
+    props:
+      height: 80vh
+      expandable: true
+
+  - id: chat_header
+    type: header
+    position: sheet-top
+    function: 챗봇 헤더
+    children:
+      - id: back_button
+        type: button
+        props:
+          icon: arrow-left
+          variant: ghost
+      - id: title
+        type: text
+        props:
+          text: AI 컨시어지
+      - id: avatar
+        type: avatar
+        props:
+          icon: robot
+
+  - id: chat_messages
+    type: message-list
+    position: sheet-body
+    function: 채팅 메시지 영역
+    children:
+      - id: ai_greeting
+        type: message
+        props:
+          sender: ai
+          text: "안녕하세요! {accommodation.name} AI 컨시어지입니다 🏠"
+      - id: ai_help
+        type: message
+        props:
+          sender: ai
+          text: 숙소에 대해 궁금한 점이 있으시면 편하게 물어보세요!
+
+  - id: faq_chips
+    type: chip-group
+    position: sheet-body
+    function: FAQ 빠른 질문 버튼
+    items:
+      - { id: wifi, text: "Wi-Fi 비밀번호가 뭔가요?" }
+      - { id: checkout, text: "체크아웃은 몇 시인가요?" }
+      - { id: food, text: "주변 맛집 추천해주세요" }
+      - { id: ac, text: "에어컨 어떻게 켜나요?" }
+
+  - id: message_input
+    type: input-group
+    position: sheet-footer
+    function: 메시지 입력 영역
+    children:
+      - id: text_input
+        type: input
+        props:
+          placeholder: 메시지를 입력하세요...
+          multiline: false
+      - id: send_button
+        type: button
+        props:
+          icon: send
+          variant: primary
+          circular: true
+
+  - id: host_fallback
+    type: banner
+    position: sheet-footer-bottom
+    function: 호스트 연락 안내
+    props:
+      text: AI가 답변하기 어려운 경우 호스트에게 직접 문의하세요
+      action: 호스트 연락하기
+
+events:
+  - trigger: faq_chips.click
+    action: ai.ask
+    params: { question: chip.text }
+
+  - trigger: send_button.click
+    action: ai.ask
+    params: { question: text_input.value }
+    on_start: clear_input
+    on_success: scroll_to_bottom
+
+  - trigger: text_input.enter
+    action: ai.ask
+    params: { question: text_input.value }
+
+  - trigger: host_fallback.click
+    action: phone.call
+    params: { number: guide.contact.phone }
+
+tests:
+  - name: FAQ 질문
+    when: Wi-Fi 칩 클릭
+    then: [AI 응답 표시]
+
+  - name: 자유 질문
+    when: 메시지 입력 후 전송
+    then: [AI 응답 생성, 대화 저장]
+
+  - name: 호스트 연락
+    when: 호스트 연락 버튼 클릭
+    then: [전화 앱 연결]

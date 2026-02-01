@@ -1,0 +1,122 @@
+# 계정 설정 화면 명세
+version: "2.0"
+
+screen:
+  id: settings
+  name: 계정 설정
+  route: /settings
+  layout: sidebar-main
+  auth_required: true
+  design_reference: design/10-settings.html
+
+data_requirements:
+  - resource: user
+    needs: [id, name, email, phone, avatar_url]
+    filters: { id: currentUser.id }
+
+components:
+  - id: sidebar
+    type: sidebar
+    position: left
+    function: 설정 메뉴 네비게이션
+    children:
+      - id: profile_preview
+        type: avatar-card
+        function: 프로필 미리보기
+      - id: menu_list
+        type: nav-list
+        function: 설정 메뉴
+        items:
+          - { id: profile, label: 프로필 정보, icon: user }
+          - { id: contact, label: 연락처 설정, icon: phone }
+          - { id: password, label: 비밀번호 변경, icon: lock }
+          - { id: plan, label: 요금제, icon: credit-card }
+          - { id: logout, label: 로그아웃, icon: logout, variant: danger }
+
+  - id: content_area
+    type: container
+    position: main
+    function: 설정 내용 영역
+
+  - id: profile_section
+    type: card
+    position: main
+    function: 프로필 정보 섹션
+    condition: activeMenu === 'profile'
+    children:
+      - id: avatar_upload
+        type: image-upload
+        function: 프로필 이미지 업로드
+      - id: name_input
+        type: input
+        function: 이름 입력
+        data_source:
+          resource: user
+          field: name
+      - id: email_display
+        type: text
+        function: 이메일 표시 (읽기전용)
+        data_source:
+          resource: user
+          field: email
+      - id: save_profile_button
+        type: button
+        function: 프로필 저장
+
+  - id: contact_section
+    type: card
+    position: main
+    function: 연락처 설정 섹션
+    condition: activeMenu === 'contact'
+    children:
+      - id: phone_input
+        type: input
+        function: 전화번호 입력
+        props:
+          placeholder: 010-0000-0000
+          helperText: 이 연락처는 가이드 하단에 표시됩니다
+      - id: save_contact_button
+        type: button
+        function: 연락처 저장
+
+  - id: plan_card
+    type: card
+    position: main
+    function: 현재 요금제 정보
+    condition: activeMenu === 'plan'
+    props:
+      title: 현재 요금제
+      plan: Free
+      features: [가이드 1개, 기본 기능]
+    children:
+      - id: upgrade_button
+        type: button
+        function: Pro 업그레이드
+        props:
+          variant: primary
+          text: Pro로 업그레이드
+
+events:
+  - trigger: save_profile_button.click
+    action: user.updateProfile
+    on_success: show_toast("저장되었습니다")
+
+  - trigger: save_contact_button.click
+    action: user.updateContact
+    on_success: show_toast("저장되었습니다")
+
+  - trigger: logout.click
+    action: auth.logout
+    on_success: navigate(/login)
+
+  - trigger: upgrade_button.click
+    action: navigate(/pricing)
+
+tests:
+  - name: 프로필 수정
+    when: 이름 변경 후 저장
+    then: [프로필 업데이트됨]
+
+  - name: 로그아웃
+    when: 로그아웃 클릭
+    then: [세션 종료, 로그인 페이지 이동]

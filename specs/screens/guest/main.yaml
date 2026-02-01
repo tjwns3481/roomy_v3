@@ -1,0 +1,118 @@
+# 게스트 메인 화면 명세
+version: "2.0"
+
+screen:
+  id: guest-main
+  name: 게스트 메인
+  route: /g/:slug
+  layout: mobile-first
+  auth_required: false
+  design_reference: design/02-guest-main.html
+
+data_requirements:
+  - resource: guide
+    needs: [id, title, content_blocks, wifi_ssid, wifi_password]
+    filters: { slug: params.slug, is_published: true }
+
+  - resource: story
+    needs: [id, media_url, media_type, order_index]
+    filters: { guide_id: guide.id }
+    orderBy: order_index
+
+  - resource: accommodation
+    needs: [name, address]
+    via: guide.accommodation_id
+
+components:
+  - id: story_circles
+    type: horizontal-scroll
+    position: top
+    function: 스토리 서클 (인스타그램 스타일)
+    data_source:
+      resource: story
+    children:
+      - id: story_circle
+        type: avatar
+        function: 개별 스토리 서클
+        props:
+          image: story.media_url
+          label: story.label
+          hasUnread: true
+
+  - id: hero_section
+    type: card
+    position: main-top
+    function: 숙소 히어로 섹션
+    children:
+      - id: hero_image
+        type: image
+        function: 대표 이미지
+      - id: accommodation_name
+        type: heading
+        function: 숙소 이름
+      - id: welcome_message
+        type: text
+        function: 환영 메시지
+
+  - id: menu_grid
+    type: grid
+    position: main
+    function: 메뉴 아이콘 그리드
+    props:
+      columns: 3
+    children:
+      - id: menu_item
+        type: icon-card
+        function: 메뉴 아이템
+        items:
+          - { id: wifi, icon: wifi, label: Wi-Fi, action: bottomsheet }
+          - { id: house, icon: home, label: 숙소안내, action: detail }
+          - { id: rules, icon: clipboard, label: 이용규칙, action: detail }
+          - { id: food, icon: utensils, label: 주변맛집, action: detail }
+          - { id: map, icon: map, label: 찾아오는 길, action: bottomsheet }
+          - { id: contact, icon: phone, label: 연락처, action: bottomsheet }
+
+  - id: ai_fab
+    type: fab
+    position: bottom-right
+    function: AI 챗봇 플로팅 버튼
+    props:
+      icon: message-circle
+      tooltip: 뭐든 물어보세요
+
+events:
+  - trigger: story_circle.click
+    action: open_overlay(story-viewer)
+    params: { startIndex: story.index }
+
+  - trigger: menu_item.click
+    condition: menu_item.action === 'bottomsheet'
+    action: open_bottomsheet
+    params: { type: menu_item.id }
+
+  - trigger: menu_item.click
+    condition: menu_item.action === 'detail'
+    action: navigate(/g/{slug}/{menu_item.id})
+
+  - trigger: ai_fab.click
+    action: open_overlay(ai-chatbot)
+
+  - trigger: page.load
+    action: guide.recordVisit
+
+tests:
+  - name: 페이지 로드
+    when: QR 스캔으로 접속
+    then: [가이드 데이터 표시, 방문 기록]
+
+  - name: 스토리 열기
+    when: 스토리 서클 클릭
+    then: [스토리 뷰어 오버레이]
+
+  - name: Wi-Fi 바텀시트
+    when: Wi-Fi 아이콘 클릭
+    then: [Wi-Fi 정보 바텀시트 표시]
+
+  - name: 비공개 가이드
+    when: is_published=false 가이드 접속
+    then: [404 페이지 표시]

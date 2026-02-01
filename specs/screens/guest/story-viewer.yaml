@@ -1,0 +1,110 @@
+# 스토리 뷰어 명세
+version: "2.0"
+
+screen:
+  id: story-viewer
+  name: 스토리 뷰어
+  route: null  # overlay
+  layout: fullscreen-overlay
+  design_reference: design/11-story-viewer.html
+
+data_requirements:
+  - resource: story
+    needs: [id, media_url, media_type, order_index]
+    filters: { guide_id: currentGuide.id }
+    orderBy: order_index
+
+components:
+  - id: overlay_container
+    type: overlay
+    position: fullscreen
+    function: 풀스크린 오버레이 컨테이너
+    props:
+      background: dark
+
+  - id: progress_bar
+    type: segmented-progress
+    position: top
+    function: 스토리 진행 바
+    props:
+      segments: stories.length
+      current: currentIndex
+
+  - id: close_button
+    type: button
+    position: top-right
+    function: 닫기 버튼
+    props:
+      icon: x
+      variant: ghost
+      color: white
+
+  - id: media_content
+    type: media
+    position: center
+    function: 이미지/비디오 콘텐츠
+    data_source:
+      resource: story
+      index: currentIndex
+    props:
+      objectFit: cover
+
+  - id: text_overlay
+    type: text
+    position: center-bottom
+    function: 스토리 텍스트 오버레이
+    props:
+      color: white
+      shadow: true
+
+  - id: tap_area_left
+    type: touch-area
+    position: left-half
+    function: 이전 스토리 터치 영역
+
+  - id: tap_area_right
+    type: touch-area
+    position: right-half
+    function: 다음 스토리 터치 영역
+
+  - id: cta_button
+    type: button
+    position: bottom
+    function: 자세히 보기 버튼
+    props:
+      text: 자세히 보기
+      icon: chevron-up
+      variant: glass
+
+events:
+  - trigger: close_button.click
+    action: close_overlay
+
+  - trigger: tap_area_left.click
+    action: story.previous
+    condition: currentIndex > 0
+
+  - trigger: tap_area_right.click
+    action: story.next
+    condition: currentIndex < stories.length - 1
+    fallback: close_overlay
+
+  - trigger: cta_button.click
+    action: navigate(story.detailLink)
+
+  - trigger: story.timeout
+    action: story.next
+    delay: 5000
+
+tests:
+  - name: 스토리 탐색
+    when: 우측 터치
+    then: [다음 스토리로 이동]
+
+  - name: 마지막 스토리
+    when: 마지막에서 우측 터치
+    then: [뷰어 닫힘]
+
+  - name: 자동 넘김
+    when: 5초 대기
+    then: [자동으로 다음 스토리]

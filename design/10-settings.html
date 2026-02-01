@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Roomy - Host Account Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b9dee",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111518] dark:text-white h-screen overflow-hidden flex">
+<!-- Left Sidebar -->
+<aside class="w-72 bg-white dark:bg-[#1a2632] flex flex-col border-r border-[#e5e7eb] dark:border-[#2d3748] h-full shrink-0">
+<div class="flex flex-col h-full p-4">
+<!-- Profile Header -->
+<div class="flex gap-3 items-center p-2 mb-6">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 shadow-sm" data-alt="User profile avatar showing a smiling face" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCzxVAQl8R7cGImyimOzrbG5-AebsC6Am_3u_INuZ_mc7AHYzZsyBgZjmeSnmqU_hye7v95j1V4SdkkKVd9kKz2wzoPuBMxDcrco9z021y-nXiSTUqeREmoQhRMZrplPsz09DZiYtZfP9ucCZXQ9AFCSo-8F3gegU2f4x4pgJQ8AExyocdHEDG0mb4ZlCVnBYu5ZGd0nb2wxg1rNKlPXkou8UEGNIuF62iGBrMs886w_7TtrfxJeRE0y_S9RB7nVdl13jAsU17FMgU");'>
+</div>
+<div class="flex flex-col overflow-hidden">
+<h1 class="text-[#111518] dark:text-white text-base font-bold leading-normal truncate">김호스트</h1>
+<p class="text-[#617989] dark:text-gray-400 text-sm font-normal leading-normal truncate">host@example.com</p>
+</div>
+</div>
+<!-- Navigation Menu -->
+<nav class="flex flex-col gap-2 flex-1">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-primary/10 text-primary group transition-colors" href="#">
+<span class="material-symbols-outlined text-primary" style="font-size: 24px;">person</span>
+<p class="text-sm font-semibold leading-normal">프로필 정보</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-[#f0f3f4] dark:hover:bg-[#2d3748] text-[#617989] dark:text-gray-300 transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">call</span>
+<p class="text-[#111518] dark:text-gray-200 text-sm font-medium leading-normal">연락처 설정</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-[#f0f3f4] dark:hover:bg-[#2d3748] text-[#617989] dark:text-gray-300 transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">lock</span>
+<p class="text-[#111518] dark:text-gray-200 text-sm font-medium leading-normal">비밀번호 변경</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-[#f0f3f4] dark:hover:bg-[#2d3748] text-[#617989] dark:text-gray-300 transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">credit_card</span>
+<p class="text-[#111518] dark:text-gray-200 text-sm font-medium leading-normal">요금제</p>
+</a>
+</nav>
+<!-- Logout -->
+<div class="mt-auto pt-4 border-t border-[#e5e7eb] dark:border-[#2d3748]">
+<button class="flex items-center gap-3 px-3 py-3 w-full rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-[#617989] dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">logout</span>
+<p class="text-sm font-medium leading-normal">로그아웃</p>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 h-full overflow-y-auto bg-background-light dark:bg-background-dark">
+<div class="max-w-5xl mx-auto px-8 py-10 flex flex-col gap-8">
+<!-- Page Heading -->
+<div class="flex flex-col gap-2">
+<h1 class="text-[#111518] dark:text-white text-3xl font-bold leading-tight">계정 설정</h1>
+<p class="text-[#617989] dark:text-gray-400 text-base font-normal">프로필과 계정 정보를 관리하세요.</p>
+</div>
+<!-- Profile Info Card -->
+<section class="bg-white dark:bg-[#1a2632] rounded-xl shadow-sm border border-[#e5e7eb] dark:border-[#2d3748] overflow-hidden">
+<div class="p-6 border-b border-[#e5e7eb] dark:border-[#2d3748]">
+<h2 class="text-xl font-bold text-[#111518] dark:text-white">프로필 정보</h2>
+</div>
+<div class="p-6 flex flex-col gap-8">
+<!-- Avatar Upload -->
+<div class="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
+<div class="bg-center bg-no-repeat bg-cover rounded-full h-24 w-24 shadow-inner ring-4 ring-gray-50 dark:ring-gray-700" data-alt="User profile avatar showing a smiling face" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA5aCSG7UvBZQaWe2cJg0UDkC2ZM-79hbo8Hd4WPlomfGhXz1JjrZneGHSWwZGdiCGlJ4e-_6Usv12xBUftAEz4WiX4MbJrgy3jIbSwZVJBOUPbDQGfk1FwCqF-yGWgkwJBUahVC6_G67WXCNDcMViAzmsZ0o8tefc9WrytcJ4O3u0fZqR5LxZaJnu3ET_QLe2sSF3TGCceIpRFGVkwOCnnBfXskyLSvjo9HPq5VI2a_cXVq31fBLCm-wuK6qfqiq9lrtq9c7Z3Iec");'>
+</div>
+<div class="flex flex-col justify-center gap-3 flex-1">
+<div>
+<h3 class="text-[#111518] dark:text-white text-lg font-bold">프로필 사진</h3>
+<p class="text-[#617989] dark:text-gray-400 text-sm">JPG, GIF or PNG. Max size of 800K</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-[#f0f3f4] hover:bg-[#e5e7eb] dark:bg-[#2d3748] dark:hover:bg-[#374151] text-[#111518] dark:text-white text-sm font-semibold rounded-lg transition-colors">
+                                    새 이미지 업로드
+                                </button>
+<button class="px-4 py-2 bg-transparent text-[#617989] dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 text-sm font-semibold rounded-lg transition-colors">
+                                    제거
+                                </button>
+</div>
+</div>
+</div>
+<!-- Form Fields -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
+<label class="flex flex-col gap-2">
+<span class="text-[#111518] dark:text-gray-200 text-sm font-bold">이름</span>
+<input class="w-full h-12 px-4 rounded-lg border border-[#dbe1e6] dark:border-[#4a5568] bg-white dark:bg-[#2d3748] text-[#111518] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-shadow" type="text" value="김호스트"/>
+</label>
+<label class="flex flex-col gap-2">
+<span class="text-[#111518] dark:text-gray-200 text-sm font-bold">이메일</span>
+<div class="relative">
+<input class="w-full h-12 px-4 rounded-lg border-none bg-[#f3f4f6] dark:bg-[#111827] text-[#617989] dark:text-gray-400 cursor-not-allowed focus:ring-0" readonly="" type="email" value="host@example.com"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-gray-400 text-sm" style="font-size: 20px;">lock</span>
+</div>
+</label>
+</div>
+<div class="pt-2">
+<button class="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-sm transition-all active:scale-95">
+                            저장
+                        </button>
+</div>
+</div>
+</section>
+<!-- Contact Settings Card -->
+<section class="bg-white dark:bg-[#1a2632] rounded-xl shadow-sm border border-[#e5e7eb] dark:border-[#2d3748] overflow-hidden">
+<div class="p-6 border-b border-[#e5e7eb] dark:border-[#2d3748]">
+<h2 class="text-xl font-bold text-[#111518] dark:text-white">연락처 설정</h2>
+</div>
+<div class="p-6 flex flex-col gap-6 max-w-3xl">
+<label class="flex flex-col gap-2">
+<span class="text-[#111518] dark:text-gray-200 text-sm font-bold">휴대폰 번호</span>
+<input class="w-full h-12 px-4 rounded-lg border border-[#dbe1e6] dark:border-[#4a5568] bg-white dark:bg-[#2d3748] text-[#111518] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-shadow" type="tel" value="010-1234-5678"/>
+<p class="text-[#617989] dark:text-gray-400 text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" style="font-size: 16px;">info</span>
+                            이 연락처는 가이드 하단에 표시됩니다.
+                        </p>
+</label>
+<div>
+<button class="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-sm transition-all active:scale-95">
+                            저장
+                        </button>
+</div>
+</div>
+</section>
+<!-- Plan Settings Card -->
+<section class="bg-white dark:bg-[#1a2632] rounded-xl shadow-sm border border-[#e5e7eb] dark:border-[#2d3748] overflow-hidden relative">
+<!-- Highlight accent -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<h2 class="text-xl font-bold text-[#111518] dark:text-white">현재 요금제</h2>
+<span class="px-2.5 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-bold border border-gray-200 dark:border-gray-600">
+                                Free 플랜
+                            </span>
+</div>
+<ul class="flex flex-col sm:flex-row gap-4 text-sm text-[#617989] dark:text-gray-300">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
+                                가이드 1개
+                            </li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 20px;">check_circle</span>
+                                기본 기능
+                            </li>
+</ul>
+</div>
+<button class="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-md shadow-blue-200 dark:shadow-blue-900/20 transition-all hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap">
+                        Pro로 업그레이드
+                    </button>
+</div>
+</section>
+<!-- Spacer for bottom scrolling -->
+<div class="h-10"></div>
+</div>
+</main>
+</body></html>

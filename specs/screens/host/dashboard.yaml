@@ -1,0 +1,105 @@
+# 호스트 대시보드 화면 명세
+version: "2.0"
+
+screen:
+  id: dashboard
+  name: 호스트 대시보드
+  route: /dashboard
+  layout: header-main
+  auth_required: true
+  design_reference: design/03-dashboard.html
+
+data_requirements:
+  - resource: guide
+    needs: [id, title, slug, is_published, view_count, updated_at]
+    filters: { user_id: currentUser.id }
+    includes: [accommodation.name]
+
+  - resource: user
+    needs: [id, name, email]
+    filters: { id: currentUser.id }
+
+components:
+  - id: header
+    type: header
+    position: top
+    function: 네비게이션 헤더
+    children:
+      - id: logo
+        type: image
+        function: Roomy 로고
+      - id: profile_menu
+        type: dropdown
+        function: 프로필/설정 메뉴
+
+  - id: stats_cards
+    type: card-group
+    position: main-top
+    function: 통계 카드 (가이드 수, 조회수, QR 스캔)
+    data_source:
+      resource: guide
+      aggregate: [count, sum(view_count)]
+
+  - id: guide_grid
+    type: grid
+    position: main
+    function: 가이드 카드 그리드
+    data_source:
+      resource: guide
+    children:
+      - id: guide_card
+        type: card
+        function: 개별 가이드 카드
+        props:
+          thumbnail: true
+          title: guide.title
+          status: guide.is_published
+          views: guide.view_count
+        actions:
+          - edit: navigate(/editor/{guide.id})
+          - qr: open_modal(qr-modal)
+          - delete: confirm_delete(guide.id)
+
+  - id: empty_state
+    type: empty-state
+    position: main
+    function: 가이드가 없을 때 CTA
+    condition: guides.length === 0
+    props:
+      icon: document-add
+      title: 첫 가이드를 만들어보세요
+      cta: 새 가이드 만들기
+
+  - id: new_guide_button
+    type: button
+    position: main-top-right
+    function: 새 가이드 생성
+    props:
+      variant: primary
+      icon: plus
+      text: 새 가이드
+
+events:
+  - trigger: new_guide_button.click
+    action: navigate(/templates)
+
+  - trigger: guide_card.click
+    action: navigate(/editor/{guide.id})
+
+  - trigger: guide_card.delete
+    action: guide.delete
+    confirm: "정말 삭제하시겠습니까?"
+    on_success: refresh_guides
+
+tests:
+  - name: 대시보드 로드
+    when: 로그인 후 접속
+    then: [사용자의 가이드 목록 표시]
+
+  - name: 빈 상태
+    when: 가이드가 없을 때
+    then: [빈 상태 CTA 표시]
+
+  - name: 가이드 삭제
+    when: 삭제 버튼 클릭 후 확인
+    then: [가이드 삭제됨, 목록 갱신]

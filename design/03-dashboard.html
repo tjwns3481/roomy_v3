@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Roomy - Host Dashboard</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d7ff2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased overflow-x-hidden">
+<div class="relative flex min-h-screen w-full flex-col group/design-root">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-50 flex w-full items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-3 lg:px-10">
+<div class="flex items-center gap-4">
+<div class="size-8 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight text-slate-900 dark:text-white">Roomy</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-full p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="h-10 w-10 overflow-hidden rounded-full border border-slate-200 dark:border-slate-700">
+<div class="h-full w-full bg-cover bg-center" data-alt="User profile avatar showing a smiling man" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuATQBKCBMF1yEh5xRlKtnzE0hNyI39-ilWPUAqbkiRcYiq-0gfjMszTAq-r4ayJ7qd07bu2i74orJl1LAGVibLe2JQBuva7S6J3mDnO2edMUgq_N7B3ZKFFfyik_nKo2zt2dOw6mYNy_pCNq6A6kiayUpUe0pvb9OfEa81KvYYf6hE9ua_rlmfcGhlSpE7fjwm6D3IwvohtRndLRB6qHUuqRcbetxwMJG6NsrHzUC0V1zN3Jswp0SxPpqy78434QdIsq1p-X2mdfnE");'></div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-4 py-8 md:px-8 lg:px-40 flex justify-center">
+<div class="flex w-full max-w-[1200px] flex-col gap-8">
+<!-- Stats Section -->
+<section class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+<!-- Stat Card 1 -->
+<div class="flex flex-col gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">총 가이드 수</p>
+<span class="material-symbols-outlined text-primary text-xl">map</span>
+</div>
+<div class="flex items-baseline gap-2">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">3개</h3>
+<span class="flex items-center text-sm font-medium text-emerald-600 dark:text-emerald-400">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                                5%
+                            </span>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="flex flex-col gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">이번 달 조회수</p>
+<span class="material-symbols-outlined text-primary text-xl">visibility</span>
+</div>
+<div class="flex items-baseline gap-2">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">1,247회</h3>
+<span class="flex items-center text-sm font-medium text-emerald-600 dark:text-emerald-400">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                                12%
+                            </span>
+</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="flex flex-col gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">QR 스캔</p>
+<span class="material-symbols-outlined text-primary text-xl">qr_code_scanner</span>
+</div>
+<div class="flex items-baseline gap-2">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">89회</h3>
+<span class="flex items-center text-sm font-medium text-emerald-600 dark:text-emerald-400">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                                2%
+                            </span>
+</div>
+</div>
+<!-- Stat Card 4 -->
+<div class="flex flex-col gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">평균 체류시간</p>
+<span class="material-symbols-outlined text-primary text-xl">schedule</span>
+</div>
+<div class="flex items-baseline gap-2">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">2분 34초</h3>
+<span class="flex items-center text-sm font-medium text-emerald-600 dark:text-emerald-400">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                                1%
+                            </span>
+</div>
+</div>
+</section>
+<!-- Guides Section -->
+<section class="flex flex-col gap-6">
+<!-- Heading -->
+<div class="flex flex-wrap items-center justify-between gap-4">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white">내 가이드 목록</h2>
+<button class="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-bold text-white shadow-md hover:bg-blue-600 transition-colors">
+<span class="material-symbols-outlined text-lg">add</span>
+                            새 가이드
+                        </button>
+</div>
+<!-- Grid -->
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+<!-- Card 1: Active -->
+<div class="group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-md">
+<!-- Image -->
+<div class="relative aspect-video w-full overflow-hidden bg-slate-100">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Luxury pool villa in Jeju with blue water and modern architecture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCRQZ0tL9IzqNe1agxHZcZxYmDjAVSvQaWJhszGWRHjuVVIf6_YEgVbGS2vQvbd75UlmPDFYoOlT9vChBAC74nTHigd2U2vYZZ8W3Ud-G7dby5Xp42vyHnuoV5Chp40dOjbE3c30Gx-MueiMR92ohdQ7FY0jOciVh6Mj2Eqr2QkXBUCDT-5YU0jYshn5MRS8Pw-aSRkxd6MiLWcX-boWyvt8quyJAYcAZ7lyArmkOsyOHdoDcUxNr0Mn7A9jApi04j1If0N0vE482A");'></div>
+<div class="absolute top-3 left-3">
+<span class="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-emerald-700 shadow-sm backdrop-blur-sm">
+<span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                                        발행중
+                                    </span>
+</div>
+</div>
+<!-- Content -->
+<div class="flex flex-1 flex-col p-5">
+<div class="mb-4">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">제주 풀빌라 가이드</h3>
+<p class="mt-1 text-sm text-slate-500 dark:text-slate-400">마지막 수정: 2023.10.12</p>
+</div>
+<div class="mt-auto flex items-end justify-between border-t border-slate-100 dark:border-slate-700 pt-4">
+<div class="flex flex-col">
+<span class="text-xs font-medium text-slate-400 uppercase">Total Views</span>
+<span class="text-lg font-bold text-slate-900 dark:text-white">523회</span>
+</div>
+<div class="flex gap-1">
+<button class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-primary dark:text-slate-400 dark:hover:bg-slate-700 transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-primary dark:text-slate-400 dark:hover:bg-slate-700 transition-colors" title="QR Code">
+<span class="material-symbols-outlined text-[20px]">qr_code_2</span>
+</button>
+<button class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-red-500 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Draft -->
+<div class="group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-md">
+<!-- Image -->
+<div class="relative aspect-video w-full overflow-hidden bg-slate-100">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Cozy wooden pension interior in Gangwon with warm lighting" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD6W6Ft0rkeKO0q6eU5YdXWU2xWKYKsTvAEtbnaJ7awjDA-_aHjULnOEJ08zSvSgO1XlUm0UqzN5qSTPJBdEBRsA_pXUjGd14gq5D_tml18pbK1GlE1MmmP1e2VPqyxo3c5saEYVHdkJpATtOgEKAtSa4f50lueXCbn0nWXFBadh5ENVI0qVk8YEhfKZv0G0V8eBVo5-omqC2SuFrwq2Ln9VIzG7clgVqX3oJgKKlFuvjx75ca_WcKuKGN2pziT7Nj85IgsLslYA14");'></div>
+<div class="absolute inset-0 bg-slate-900/10"></div>
+<div class="absolute top-3 left-3">
+<span class="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-amber-700 shadow-sm backdrop-blur-sm">
+<span class="h-2 w-2 rounded-full bg-amber-500"></span>
+                                        임시저장
+                                    </span>
+</div>
+</div>
+<!-- Content -->
+<div class="flex flex-1 flex-col p-5">
+<div class="mb-4">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">강원 펜션 가이드</h3>
+<p class="mt-1 text-sm text-slate-500 dark:text-slate-400">마지막 수정: 2시간 전</p>
+</div>
+<div class="mt-auto flex items-end justify-between border-t border-slate-100 dark:border-slate-700 pt-4">
+<div class="flex flex-col">
+<span class="text-xs font-medium text-slate-400 uppercase">Total Views</span>
+<span class="text-lg font-bold text-slate-400">-</span>
+</div>
+<div class="flex gap-1">
+<button class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-primary dark:text-slate-400 dark:hover:bg-slate-700 transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-primary dark:text-slate-400 dark:hover:bg-slate-700 transition-colors" title="QR Code">
+<span class="material-symbols-outlined text-[20px]">qr_code_2</span>
+</button>
+<button class="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-red-500 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3: New Guide Placeholder -->
+<button class="group flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-6 transition-all hover:border-primary hover:bg-primary/5 dark:hover:border-primary">
+<div class="flex h-16 w-16 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700 text-slate-400 group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">add</span>
+</div>
+<div class="text-center">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary">새 가이드 만들기</h3>
+<p class="mt-1 text-sm text-slate-500 dark:text-slate-400">새로운 게스트 가이드를 생성하세요</p>
+</div>
+</button>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

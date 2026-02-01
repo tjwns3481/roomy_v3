@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Roomy Admin Dashboard</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b9dee",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101a22",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.375rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased">
+<div class="flex h-screen w-full overflow-hidden">
+<!-- Sidebar -->
+<aside class="flex w-64 flex-col bg-[#111827] text-white">
+<!-- Logo Area -->
+<div class="flex h-16 items-center gap-3 px-6 border-b border-gray-800">
+<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+<span class="material-symbols-outlined text-white text-[20px]">grid_view</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<h1 class="text-lg font-bold tracking-tight">Roomy</h1>
+<span class="rounded bg-gray-700 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-gray-300">Admin</span>
+</div>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex-1 overflow-y-auto px-4 py-6">
+<ul class="flex flex-col gap-1">
+<li>
+<a class="group flex items-center gap-3 rounded-lg bg-primary px-3 py-2.5 text-sm font-medium text-white shadow-sm ring-1 ring-primary" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+                        대시보드
+                    </a>
+</li>
+<li>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+                        사용자 관리
+                    </a>
+</li>
+<li>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+                        가이드 관리
+                    </a>
+</li>
+<li>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+                        AI 로그
+                    </a>
+</li>
+<li>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+                        시스템 설정
+                    </a>
+</li>
+</ul>
+<div class="mt-8">
+<h3 class="px-3 text-xs font-semibold uppercase tracking-wider text-gray-500">Support</h3>
+<ul class="mt-2 flex flex-col gap-1">
+<li>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+                            Help Center
+                        </a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- User Profile (Bottom Sidebar) -->
+<div class="border-t border-gray-800 p-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-gray-700 bg-center bg-cover" data-alt="Admin User Avatar" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDbVp1JDaHjcNyffUH_cnmDoxv_TANoRytg_na2BagYlIerB7bwO6J0jH9zrvu45nOLrtNTQnAK7xO9P6ATvnzzCygX2lGX_BYq2UN37O7t--F_4hsUHpMzsjhl4AGWDWoI71rm2NgzgTFyE9D51q4c3aDbQ0Mea56SgoLQmCb6k8c6EvyvI8CIWvZBuCFUfyHKBtlBUVcgmng9GmMswidCCEvNAVB7ZqAqSGgB__zb2ka1X_tqLuVSqiFIFWVvGGeliWgqHts1VbU');"></div>
+<div class="flex flex-col overflow-hidden">
+<p class="truncate text-sm font-medium text-white">Admin User</p>
+<p class="truncate text-xs text-gray-400">admin@roomy.io</p>
+</div>
+<button class="ml-auto flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex flex-1 flex-col h-full overflow-hidden bg-background-light dark:bg-background-dark">
+<!-- Top Header -->
+<header class="flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white dark:bg-[#1e293b] px-6 dark:border-gray-700">
+<!-- Search Bar -->
+<div class="flex w-full max-w-lg items-center rounded-full bg-gray-100 px-4 py-2 dark:bg-gray-800">
+<span class="material-symbols-outlined text-gray-400">search</span>
+<input class="ml-2 w-full bg-transparent text-sm text-gray-900 placeholder-gray-500 focus:outline-none dark:text-white dark:placeholder-gray-400 border-none focus:ring-0" placeholder="사용자, 가이드, AI 로그 검색..." type="text"/>
+</div>
+<!-- Header Actions -->
+<div class="flex items-center gap-4">
+<button class="relative rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-[#1e293b]"></span>
+</button>
+<div class="h-8 w-[1px] bg-gray-200 dark:bg-gray-700"></div>
+<div class="flex items-center gap-2">
+<div class="text-right hidden md:block">
+<p class="text-xs text-gray-500 dark:text-gray-400">Last login: Today, 09:41 AM</p>
+</div>
+</div>
+</div>
+</header>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto p-6 md:p-8">
+<div class="mx-auto max-w-7xl">
+<div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+<div>
+<h2 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard Overview</h2>
+<p class="text-sm text-gray-500 dark:text-gray-400">Welcome back, here's what's happening with your service today.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm border border-gray-200 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                            Export Report
+                        </button>
+<button class="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-600">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                            New Guide
+                        </button>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
+<!-- Main Stats & Charts Area -->
+<div class="col-span-1 lg:col-span-3 flex flex-col gap-6">
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+<!-- Card 1 -->
+<div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-[#1e293b]">
+<div class="flex items-center justify-between">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+<span class="material-symbols-outlined">group</span>
+</div>
+<span class="flex items-center text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full dark:bg-green-900/30 dark:text-green-400">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_up</span>
+                                        +12%
+                                    </span>
+</div>
+<div class="mt-4">
+<p class="text-sm font-medium text-gray-500 dark:text-gray-400">총 사용자</p>
+<h3 class="mt-1 text-2xl font-bold text-gray-900 dark:text-white">1,247</h3>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-[#1e293b]">
+<div class="flex items-center justify-between">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
+<span class="material-symbols-outlined">book</span>
+</div>
+<span class="flex items-center text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full dark:bg-green-900/30 dark:text-green-400">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_up</span>
+                                        +8%
+                                    </span>
+</div>
+<div class="mt-4">
+<p class="text-sm font-medium text-gray-500 dark:text-gray-400">총 가이드</p>
+<h3 class="mt-1 text-2xl font-bold text-gray-900 dark:text-white">892</h3>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-[#1e293b]">
+<div class="flex items-center justify-between">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+</div>
+<span class="flex items-center text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full dark:bg-green-900/30 dark:text-green-400">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_up</span>
+                                        +5%
+                                    </span>
+</div>
+<div class="mt-4">
+<p class="text-sm font-medium text-gray-500 dark:text-gray-400">오늘 QR 스캔</p>
+<h3 class="mt-1 text-2xl font-bold text-gray-900 dark:text-white">3,456</h3>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-[#1e293b]">
+<div class="flex items-center justify-between">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<span class="flex items-center text-xs font-medium text-gray-500 bg-gray-50 px-2 py-1 rounded-full dark:bg-gray-800 dark:text-gray-400">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_flat</span>
+                                        0%
+                                    </span>
+</div>
+<div class="mt-4">
+<p class="text-sm font-medium text-gray-500 dark:text-gray-400">AI 질문 수</p>
+<h3 class="mt-1 text-2xl font-bold text-gray-900 dark:text-white">567</h3>
+</div>
+</div>
+</div>
+<!-- Charts Section -->
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+<!-- Line Chart -->
+<div class="lg:col-span-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-[#1e293b]">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="text-base font-semibold text-gray-900 dark:text-white">일별 가입자 추이</h3>
+<p class="text-sm text-gray-500 dark:text-gray-400">Recent user growth</p>
+</div>
+<select class="rounded-lg border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600 focus:border-primary focus:ring-primary dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300">
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+</select>
+</div>
+<div class="relative h-64 w-full">
+<div class="absolute inset-0 flex items-end justify-between px-2 pb-6">
+<!-- Mock Chart Bars/Lines using HTML/CSS only for simplicity but styled as requested -->
+<div class="flex h-full w-full items-end gap-2">
+<!-- SVG Chart representation -->
+<svg class="h-full w-full overflow-visible" preserveaspectratio="none" viewbox="0 0 400 150">
+<!-- Grid Lines -->
+<line stroke="#e5e7eb" stroke-width="1" x1="0" x2="400" y1="150" y2="150"></line>
+<line stroke="#e5e7eb" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="400" y1="100" y2="100"></line>
+<line stroke="#e5e7eb" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="400" y1="50" y2="50"></line>
+<!-- The Line -->
+<path d="M0,120 Q50,130 80,90 T160,70 T240,100 T320,40 T400,60" fill="none" stroke="#2b9dee" stroke-linecap="round" stroke-width="3"></path>
+<!-- Gradient Fill under the line -->
+<path d="M0,120 Q50,130 80,90 T160,70 T240,100 T320,40 T400,60 V150 H0 Z" fill="url(#blueGradient)" opacity="0.1"></path>
+<defs>
+<lineargradient id="blueGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#2b9dee;stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:#2b9dee;stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+<!-- Data Points -->
+<circle class="hidden sm:block" cx="0" cy="120" fill="#2b9dee" r="3"></circle>
+<circle class="hidden sm:block" cx="80" cy="90" fill="#2b9dee" r="3"></circle>
+<circle class="hidden sm:block" cx="160" cy="70" fill="#2b9dee" r="3"></circle>
+<circle class="hidden sm:block" cx="240" cy="100" fill="#2b9dee" r="3"></circle>
+<circle class="hidden sm:block" cx="320" cy="40" fill="#2b9dee" r="3"></circle>
+<circle class="hidden sm:block" cx="400" cy="60" fill="#2b9dee" r="3"></circle>
+</svg>
+</div>
+</div>
+<!-- X Axis Labels -->
+<div class="absolute bottom-0 left-0 right-0 flex justify-between px-2 text-xs font-medium text-gray-400">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+</div>
+</div>
+<!-- Donut Chart -->
+<div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-[#1e293b]">
+<h3 class="mb-6 text-base font-semibold text-gray-900 dark:text-white">가이드 유형 분포</h3>
+<div class="relative flex h-48 items-center justify-center">
+<!-- CSS Conic Gradient for Donut Chart -->
+<div class="h-40 w-40 rounded-full" style="background: conic-gradient(#2b9dee 0% 40%, #818cf8 40% 75%, #34d399 75% 100%);"></div>
+<div class="absolute h-28 w-28 rounded-full bg-white dark:bg-[#1e293b] flex flex-col items-center justify-center">
+<span class="text-2xl font-bold text-gray-900 dark:text-white">892</span>
+<span class="text-[10px] text-gray-500">Total</span>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-3">
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="h-2.5 w-2.5 rounded-full bg-primary"></span>
+<span class="text-gray-600 dark:text-gray-300">Pension</span>
+</div>
+<span class="font-semibold text-gray-900 dark:text-white">40%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="h-2.5 w-2.5 rounded-full bg-indigo-400"></span>
+<span class="text-gray-600 dark:text-gray-300">Pool Villa</span>
+</div>
+<span class="font-semibold text-gray-900 dark:text-white">35%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
+<span class="text-gray-600 dark:text-gray-300">Glamping</span>
+</div>
+<span class="font-semibold text-gray-900 dark:text-white">25%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Table Section -->
+<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-[#1e293b]">
+<div class="border-b border-gray-200 px-6 py-4 dark:border-gray-700">
+<h3 class="text-base font-semibold text-gray-900 dark:text-white">Recent Activity</h3>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+<thead class="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+<tr>
+<th class="px-6 py-3 font-semibold" scope="col">시간</th>
+<th class="px-6 py-3 font-semibold" scope="col">사용자</th>
+<th class="px-6 py-3 font-semibold" scope="col">활동</th>
+<th class="px-6 py-3 font-semibold" scope="col">상태</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">10:42 AM</td>
+<td class="whitespace-nowrap px-6 py-4">user_01</td>
+<td class="whitespace-nowrap px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-blue-500">add_circle</span>
+                                                    가이드 생성
+                                                </div>
+</td>
+<td class="whitespace-nowrap px-6 py-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                                    Success
+                                                </span>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">10:40 AM</td>
+<td class="whitespace-nowrap px-6 py-4">user_99</td>
+<td class="whitespace-nowrap px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-purple-500">chat</span>
+                                                    AI 질문
+                                                </div>
+</td>
+<td class="whitespace-nowrap px-6 py-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                                    Success
+                                                </span>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">10:15 AM</td>
+<td class="whitespace-nowrap px-6 py-4">user_55</td>
+<td class="whitespace-nowrap px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-gray-500">person_add</span>
+                                                    회원가입
+                                                </div>
+</td>
+<td class="whitespace-nowrap px-6 py-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                                    Success
+                                                </span>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">09:50 AM</td>
+<td class="whitespace-nowrap px-6 py-4">user_12</td>
+<td class="whitespace-nowrap px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-orange-500">edit_document</span>
+                                                    가이드 수정
+                                                </div>
+</td>
+<td class="whitespace-nowrap px-6 py-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
+<span class="material-symbols-outlined text-[14px]">pending</span>
+                                                    Pending
+                                                </span>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white">09:30 AM</td>
+<td class="whitespace-nowrap px-6 py-4">user_03</td>
+<td class="whitespace-nowrap px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-indigo-500">qr_code</span>
+                                                    QR 스캔
+                                                </div>
+</td>
+<td class="whitespace-nowrap px-6 py-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                                    Success
+                                                </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Right Sidebar / Quick Actions -->
+<div class="col-span-1 lg:col-span-1 flex flex-col gap-6">
+<!-- Quick Actions / Alerts Card -->
+<div class="rounded-xl border border-red-100 bg-red-50/50 p-5 dark:border-red-900/50 dark:bg-red-900/10">
+<h3 class="flex items-center gap-2 text-base font-bold text-red-800 dark:text-red-400">
+<span class="material-symbols-outlined">warning</span>
+                                빠른 작업 필요
+                            </h3>
+<div class="mt-4 flex flex-col gap-3">
+<button class="flex items-center justify-between w-full rounded-lg bg-white p-3 shadow-sm hover:bg-red-50 transition border border-red-100 dark:bg-[#1e293b] dark:border-red-900/30 dark:hover:bg-red-900/20">
+<div class="flex flex-col items-start">
+<span class="text-sm font-semibold text-gray-800 dark:text-gray-200">신규 가입 승인 대기</span>
+<span class="text-xs text-gray-500 dark:text-gray-400">승인 요청 3건</span>
+</div>
+<span class="flex h-6 w-6 items-center justify-center rounded-full bg-red-100 text-xs font-bold text-red-600 dark:bg-red-900/40 dark:text-red-400">3</span>
+</button>
+<button class="flex items-center justify-between w-full rounded-lg bg-white p-3 shadow-sm hover:bg-red-50 transition border border-red-100 dark:bg-[#1e293b] dark:border-red-900/30 dark:hover:bg-red-900/20">
+<div class="flex flex-col items-start">
+<span class="text-sm font-semibold text-gray-800 dark:text-gray-200">신고된 가이드</span>
+<span class="text-xs text-gray-500 dark:text-gray-400">부적절한 컨텐츠 1건</span>
+</div>
+<span class="flex h-6 w-6 items-center justify-center rounded-full bg-red-100 text-xs font-bold text-red-600 dark:bg-red-900/40 dark:text-red-400">1</span>
+</button>
+</div>
+</div>
+<!-- System Status -->
+<div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-[#1e293b]">
+<h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">System Status</h3>
+<div class="flex flex-col gap-4">
+<div>
+<div class="mb-1 flex justify-between text-xs font-medium">
+<span class="text-gray-600 dark:text-gray-400">Server Load</span>
+<span class="text-green-600 dark:text-green-400">Healthy (24%)</span>
+</div>
+<div class="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-700">
+<div class="h-1.5 rounded-full bg-green-500" style="width: 24%"></div>
+</div>
+</div>
+<div>
+<div class="mb-1 flex justify-between text-xs font-medium">
+<span class="text-gray-600 dark:text-gray-400">API Latency</span>
+<span class="text-green-600 dark:text-green-400">45ms</span>
+</div>
+<div class="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-700">
+<div class="h-1.5 rounded-full bg-green-500" style="width: 15%"></div>
+</div>
+</div>
+<div>
+<div class="mb-1 flex justify-between text-xs font-medium">
+<span class="text-gray-600 dark:text-gray-400">AI Tokens</span>
+<span class="text-yellow-600 dark:text-yellow-400">82% Used</span>
+</div>
+<div class="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-700">
+<div class="h-1.5 rounded-full bg-yellow-400" style="width: 82%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Top Referrers -->
+<div class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-[#1e293b]">
+<h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Top Guides</h3>
+<ul class="flex flex-col gap-3">
+<li class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-lg bg-gray-100 bg-cover bg-center" data-alt="Image of Sunset Villa Guide" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBSGcDIQaBNUziHb8FtIdBsu4l1lZWARsCUbKxrgvQ_2mUY74iwHUmQlMt0iWHGh9tIP4F1WXm8lQ38ZRITNBbaT6YU8MO0IZLrJjsqkPTQEb4YKXVjqQr0lLNMZ5nLc3TXH_uVnjoSdAx9pnOYXwxe2UQ-twpXzfWHuIyr9QNv7fXRMxudHG6viJwr6C3x412NskhuKEbIHH_rh0LZLGx3GpIGWPrE-nJpdqk7Xj_R67Zhtwpvtwn7QMnHMz3C6tnFm1o6ODm3ESo');"></div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-gray-900 dark:text-white">Sunset Villa</span>
+<span class="text-xs text-gray-500">2,403 views</span>
+</div>
+</li>
+<li class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-lg bg-gray-100 bg-cover bg-center" data-alt="Image of Urban Loft Guide" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD3A91-mFacdw_EASDB3xufgSqzBrqWCSGiCW_4aadkWJLH55_XOVtBMW-raOKkZCkrgEo-RYZGAQFKGdmR30cSJC3eW5VQlPzzMjCgK080mBGhCM6vBnVng5sRTSXBGkKK3-t-tNOmnlorm3BfZumnAifGd2W89AklGz4OwKBQkpyv8_60RuL3yBUgHVp6gUrPVQuY6A9oewAF5YB8-S7_Io8EulwXAr_qG31q1zTA9g7m_i-f85cYC_e64PJskFRx5JDmJRBhHcw');"></div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-gray-900 dark:text-white">Urban Loft</span>
+<span class="text-xs text-gray-500">1,892 views</span>
+</div>
+</li>
+<li class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-lg bg-gray-100 bg-cover bg-center" data-alt="Image of Cozy Cabin Guide" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC9nCSpL4JiyTadgGzD6aihV6qIfi_tdC7E7ynQIpxuigrZRL6C7lPtg-cYAJDLqWHxqVuLNj_AYtJyjuJR63h-pgpfwXBXEPFQ6FaIYOm_rQXV9acfXpv5YS2VmucDccQnv5cpefKI2ECUJaZMnvf9MnSjbiXRvPMUZJmwYUCYmYh_VRxVkUdg01x_UuKp6MD5hUqJRUuYn01kSP9SCaMFRj5hCkwZJHDdaIJ311MAQe1BXjkbOdgOoO7RtqUCvBbUHuiZko_99XY');"></div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-gray-900 dark:text-white">Cozy Cabin</span>
+<span class="text-xs text-gray-500">1,204 views</span>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<footer class="mt-8 border-t border-gray-200 pt-6 text-center text-xs text-gray-400 dark:border-gray-700">
+<p>© 2024 Roomy Service Admin. All rights reserved.</p>
+</footer>
+</div>
+</div>
+</main>
+</div>
+</body></html>
