@@ -52,8 +52,20 @@ export default async function GuestPage({ params }: PageProps) {
     (a: any, b: any) => a.order_index - b.order_index
   );
 
+  // Use first story image or placeholder for hero
+  const heroImage =
+    stories.length > 0
+      ? stories[0].media_url
+      : "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=800";
+
   return (
-    <GuestLayout variant="gradient">
+    <GuestLayout
+      variant="gradient"
+      heroImage={heroImage}
+      heroTitle={guide.title}
+      heroSubtitle="환영합니다!"
+      showQuickAccess={true}
+    >
       <Header title={guide.title} />
 
       {/* 스토리 버블 */}
@@ -66,45 +78,6 @@ export default async function GuestPage({ params }: PageProps) {
           }}
         />
       )}
-
-      {/* 가이드 콘텐츠 영역 */}
-      <div className="mt-6 space-y-6">
-        {/* TODO: P4-S1-T3에서 ContentBlocks 렌더링 */}
-        <div className="text-center py-12 text-slate-500">
-          <p className="text-sm">콘텐츠 블록 렌더링 예정</p>
-          <p className="text-xs mt-2">
-            (P4-S1-T3: ContentBlocks 컴포넌트)
-          </p>
-        </div>
-      </div>
-
-      {/* WiFi 정보 (빠른 접근) */}
-      {guide.wifi_ssid && guide.wifi_password && (
-        <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-          <h3 className="text-sm font-semibold text-blue-900 mb-2">
-            WiFi 정보
-          </h3>
-          <div className="space-y-1 text-sm">
-            <div className="flex justify-between">
-              <span className="text-blue-700">네트워크:</span>
-              <span className="font-mono text-blue-900">{guide.wifi_ssid}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-blue-700">비밀번호:</span>
-              <span className="font-mono text-blue-900">
-                {guide.wifi_password}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 푸터 */}
-      <footer className="mt-12 py-6 border-t border-slate-200">
-        <p className="text-center text-xs text-slate-500">
-          Powered by Roomy
-        </p>
-      </footer>
     </GuestLayout>
   );
 }

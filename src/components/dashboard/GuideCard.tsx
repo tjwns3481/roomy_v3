@@ -54,16 +54,15 @@ export function GuideCard({ guide, onEdit, onQRCode, onDelete }: GuideCardProps)
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-all hover:shadow-md">
       {/* Thumbnail */}
-      <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
+      <div className="relative aspect-video w-full overflow-hidden bg-slate-100 dark:bg-slate-700">
         {guide.thumbnail_url && !imageError ? (
-          <img
-            src={guide.thumbnail_url}
-            alt={guide.title}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          <div
+            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+            style={{ backgroundImage: `url(${guide.thumbnail_url})` }}
             onError={() => setImageError(true)}
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-slate-700">
+          <div className="absolute inset-0 flex items-center justify-center">
             <span className="material-symbols-outlined text-4xl text-slate-400">
               image
             </span>

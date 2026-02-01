@@ -1,7 +1,7 @@
-@import "tailwindcss";
-
 /* Material Symbols Icons */
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+@import "tailwindcss";
 
 :root {
   --background: #ffffff;
@@ -9,6 +9,11 @@
   --primary: #0d7ff2;
   --background-light: #f5f7f8;
   --background-dark: #101922;
+
+  /* Guest theme colors */
+  --guest-primary: #0df2f2;
+  --guest-background-light: #f5f8f8;
+  --guest-surface-light: #ffffff;
 }
 
 @theme inline {
@@ -17,6 +22,9 @@
   --color-primary: var(--primary);
   --color-background-light: var(--background-light);
   --color-background-dark: var(--background-dark);
+  --color-guest-primary: var(--guest-primary);
+  --color-guest-background-light: var(--guest-background-light);
+  --color-guest-surface-light: var(--guest-surface-light);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -48,4 +56,25 @@ body {
   direction: ltr;
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
+}
+
+/* Hide scrollbar for horizontal scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Story gradient border (Instagram-style) */
+.story-gradient-border {
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(45deg, #0df2f2, #2563eb) border-box;
+  border: 3px solid transparent;
+}
+
+/* Shadow utility */
+.shadow-soft {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
 }
