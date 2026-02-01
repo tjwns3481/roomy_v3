@@ -1,22 +1,25 @@
-// @TASK P1-S1-T1 - 로그인 폼 컴포넌트
-// @TASK P1-S1-T2 - useAuth 훅 연결
-// @SPEC specs/screens/auth/login.yaml
-// @DESIGN design/04-login.html
+// @TASK P7-PowerQA - 회원가입 폼 컴포넌트
+// @DESIGN design/08-signup.html
 
 "use client";
 
 import * as React from "react";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-interface LoginFormProps {
-  onSubmit?: (email: string, password: string) => Promise<void>;
+interface SignupFormProps {
+  onSubmit?: (email: string, password: string, name: string) => Promise<void>;
 }
 
-export const LoginForm = ({ onSubmit }: LoginFormProps) => {
+export const SignupForm = ({ onSubmit }: SignupFormProps) => {
+  const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [termsAgreed, setTermsAgreed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,8 +28,8 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
     setError(null);
 
     // 클라이언트 유효성 검사
-    if (!email || !password) {
-      setError("이메일과 비밀번호를 입력해주세요.");
+    if (!email || !password || !confirmPassword) {
+      setError("모든 필드를 입력해주세요.");
       return;
     }
 
@@ -35,27 +38,44 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
       return;
     }
 
+    if (password.length < 8) {
+      setError("비밀번호는 8자 이상이어야 합니다.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    if (!termsAgreed) {
+      setError("이용약관 및 개인정보처리방침에 동의해주세요.");
+      return;
+    }
+
     try {
       setIsLoading(true);
       if (onSubmit) {
-        await onSubmit(email, password);
+        await onSubmit(email, password, name);
       } else {
         // TODO: useAuth 훅 연결
-        console.log("로그인:", email);
+        console.log("회원가입:", { email, name });
+        // 임시로 dashboard로 이동
+        router.push("/dashboard");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "로그인 실패");
+      setError(err instanceof Error ? err.message : "회원가입 실패");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGoogleLogin = () => {
-    console.log("Google 로그인 시도");
+  const handleGoogleSignup = () => {
+    console.log("Google 회원가입 시도");
   };
 
-  const handleKakaoLogin = () => {
-    console.log("Kakao 로그인 시도");
+  const handleKakaoSignup = () => {
+    console.log("Kakao 회원가입 시도");
   };
 
   return (
@@ -86,14 +106,36 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
               </div>
               <span className="text-2xl font-bold tracking-tight text-[#111418] dark:text-white">Roomy</span>
             </div>
+            {/* Title */}
+            <h1 className="text-2xl font-bold text-[#111418] dark:text-white">회원가입</h1>
             {/* Subtitle */}
             <h3 className="text-[#60758a] dark:text-[#9ca3af] text-sm md:text-base font-medium">
-              숙소 가이드를 3분만에 만들어보세요
+              3분만에 첫 가이드를 만들어보세요
             </h3>
           </div>
 
-          {/* Login Form */}
+          {/* Signup Form */}
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            {/* Name Input (Optional) */}
+            <div className="flex flex-col gap-2">
+              <label
+                className="text-[#111418] dark:text-white text-sm font-semibold"
+                htmlFor="name"
+              >
+                이름 (선택)
+              </label>
+              <input
+                className="form-input flex w-full rounded-lg border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-800 text-[#111418] dark:text-white focus:border-[#0d7ff2] focus:ring-[#0d7ff2] h-12 px-4 placeholder:text-[#9ca3af] text-base transition-colors"
+                id="name"
+                name="name"
+                type="text"
+                placeholder="이름"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+
             {/* Email Input */}
             <div className="flex flex-col gap-2">
               <label
@@ -111,6 +153,7 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
+                required
               />
             </div>
 
@@ -128,10 +171,11 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="비밀번호"
+                  placeholder="비밀번호 (8자 이상)"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
+                  required
                 />
                 <button
                   type="button"
@@ -147,14 +191,49 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
               </div>
             </div>
 
-            {/* Forgot Password Link */}
-            <div className="flex justify-end">
-              <Link
-                href="#"
-                className="text-[#60758a] dark:text-[#9ca3af] text-sm font-medium hover:text-[#0d7ff2] dark:hover:text-[#0d7ff2] transition-colors"
+            {/* Confirm Password Input */}
+            <div className="flex flex-col gap-2">
+              <label
+                className="text-[#111418] dark:text-white text-sm font-semibold"
+                htmlFor="confirm_password"
               >
-                비밀번호를 잊으셨나요?
-              </Link>
+                비밀번호 확인
+              </label>
+              <input
+                className="form-input flex w-full rounded-lg border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-800 text-[#111418] dark:text-white focus:border-[#0d7ff2] focus:ring-[#0d7ff2] h-12 px-4 placeholder:text-[#9ca3af] text-base transition-colors"
+                id="confirm_password"
+                name="confirmPassword"
+                type="password"
+                placeholder="비밀번호 확인"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                disabled={isLoading}
+                required
+              />
+            </div>
+
+            {/* Terms Checkbox */}
+            <div className="flex items-start gap-3 mt-1">
+              <div className="flex items-center h-5">
+                <input
+                  id="terms"
+                  type="checkbox"
+                  checked={termsAgreed}
+                  onChange={(e) => setTermsAgreed(e.target.checked)}
+                  className="w-4 h-4 border border-[#dbe0e6] dark:border-gray-600 rounded bg-white dark:bg-gray-800 focus:ring-2 focus:ring-[#0d7ff2]/20 checked:bg-[#0d7ff2] checked:border-[#0d7ff2] transition-colors"
+                  disabled={isLoading}
+                />
+              </div>
+              <label className="text-xs text-[#60758a] dark:text-[#9ca3af] leading-5" htmlFor="terms">
+                <Link href="#" className="text-[#0d7ff2] hover:underline font-medium">
+                  이용약관
+                </Link>
+                {" "}및{" "}
+                <Link href="#" className="text-[#0d7ff2] hover:underline font-medium">
+                  개인정보처리방침
+                </Link>
+                에 동의합니다
+              </label>
             </div>
 
             {/* Error Message */}
@@ -174,7 +253,7 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
               disabled={isLoading}
               className="mt-2 w-full bg-[#0d7ff2] hover:bg-blue-600 text-white font-bold h-12 rounded-lg transition-colors flex items-center justify-center shadow-md shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? "로그인 중..." : "로그인"}
+              {isLoading ? "가입 중..." : "가입하기"}
             </button>
           </form>
 
@@ -185,12 +264,12 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
             <div className="h-px flex-1 bg-[#e5e7eb] dark:bg-gray-700" />
           </div>
 
-          {/* Social Login Buttons */}
+          {/* Social Signup Buttons */}
           <div className="flex flex-col gap-3">
             {/* Google Button */}
             <button
               type="button"
-              onClick={handleGoogleLogin}
+              onClick={handleGoogleSignup}
               disabled={isLoading}
               className="w-full flex items-center justify-center gap-3 bg-white dark:bg-white h-12 rounded-lg border border-[#e5e7eb] hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -212,28 +291,28 @@ export const LoginForm = ({ onSubmit }: LoginFormProps) => {
                   fill="#EA4335"
                 />
               </svg>
-              <span className="text-[#111418] font-medium text-[15px]">Google로 계속하기</span>
+              <span className="text-[#111418] font-medium text-[15px]">Google로 시작하기</span>
             </button>
 
             {/* Kakao Button */}
             <button
               type="button"
-              onClick={handleKakaoLogin}
+              onClick={handleKakaoSignup}
               disabled={isLoading}
               className="w-full flex items-center justify-center gap-3 bg-[#FEE500] hover:bg-[#FDD835] h-12 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-5 h-5 text-[#3C1E1E]" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 3C7.58 3 4 5.28 4 8.5C4 10.59 5.34 12.44 7.42 13.4L6.59 16.5C6.54 16.69 6.74 16.86 6.91 16.74L10.74 14.19C11.15 14.23 11.57 14.25 12 14.25C16.42 14.25 20 11.97 20 8.75C20 5.53 16.42 3 12 3Z" />
               </svg>
-              <span className="text-[#3C1E1E] font-medium text-[15px]">카카오로 계속하기</span>
+              <span className="text-[#3C1E1E] font-medium text-[15px]">카카오로 시작하기</span>
             </button>
           </div>
 
           {/* Footer */}
           <div className="flex items-center justify-center gap-1.5 pt-2">
-            <p className="text-[#60758a] dark:text-[#9ca3af] text-sm">계정이 없으신가요?</p>
-            <Link href="/signup" className="text-[#0d7ff2] font-bold text-sm hover:underline">
-              회원가입
+            <p className="text-[#60758a] dark:text-[#9ca3af] text-sm">이미 계정이 있으신가요?</p>
+            <Link href="/login" className="text-[#0d7ff2] font-bold text-sm hover:underline">
+              로그인
             </Link>
           </div>
         </div>
