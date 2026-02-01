@@ -32,7 +32,11 @@ export default function BlocksDemoPage() {
       data: {
         checkIn: '15:00',
         checkOut: '11:00',
-        items: ['금연', '반려동물 동반 불가', '파티 금지'],
+        items: [
+          { id: 'rule-1', text: '금연', category: 'notice' },
+          { id: 'rule-2', text: '반려동물 동반 불가', category: 'notice' },
+          { id: 'rule-3', text: '파티 금지', category: 'notice' },
+        ],
       },
     },
   ]);

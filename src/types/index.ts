@@ -63,18 +63,27 @@ export type BlockData =
   | DevicesBlockData
   | PlacesBlockData
   | TextBlockData
-  | ImageBlockData;
+  | ImageBlockData
+  | GalleryBlockData;
 
 export interface WifiBlockData {
   ssid: string;
   password: string;
+  networkType?: "WPA" | "WPA2" | "WEP" | "None";
   note?: string;
+}
+
+export interface RuleItem {
+  id: string;
+  text: string;
+  icon?: string;
+  category?: "checkin" | "guide" | "notice";
 }
 
 export interface RulesBlockData {
   checkIn: string;
   checkOut: string;
-  items: string[];
+  items: RuleItem[];
 }
 
 export interface DevicesBlockData {
@@ -101,13 +110,27 @@ export interface PlaceItem {
 }
 
 export interface TextBlockData {
-  title: string;
+  title?: string;
   content: string;
+  alignment?: "left" | "center" | "right";
+  fontSize?: "sm" | "md" | "lg";
 }
 
 export interface ImageBlockData {
   url: string;
   caption?: string;
+}
+
+export interface GalleryBlockData {
+  images: GalleryImage[];
+  layout?: "grid" | "slider";
+}
+
+export interface GalleryImage {
+  id: string;
+  url: string;
+  caption?: string;
+  order: number;
 }
 
 // Story
