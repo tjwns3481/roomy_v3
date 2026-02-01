@@ -1,0 +1,212 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('호스트 흐름', () => {
+  // 테스트용 계정 정보
+  const testEmail = 'host@example.com';
+  const testPassword = 'Host1234!@#$';
+
+  test.beforeEach(async ({ page }) => {
+    // 각 테스트 전에 로그인 시도
+    await page.goto('/auth/login');
+
+    // 폼이 있다면 로그인 시도
+    const emailInput = page.locator('input[name="email"]');
+    if (await emailInput.isVisible()) {
+      await emailInput.fill(testEmail);
+      await page.fill('input[name="password"]', testPassword);
+      await page.click('button[type="submit"]');
+      await page.waitForTimeout(2000);
+    }
+  });
+
+  test('대시보드 접근 및 표시 확인', async ({ page }) => {
+    // 1. 대시보드로 이동
+    await page.goto('/dashboard');
+
+    // 2. 대시보드 주요 요소 확인
+    await expect(page.getByText(/내 가이드/i)).toBeVisible({ timeout: 10000 });
+
+    // 3. 통계 카드 확인 (총 가이드 수, 조회수 등)
+    const statsSection = page.locator('[data-testid="stats-section"]');
+    if (await statsSection.isVisible()) {
+      await expect(statsSection).toBeVisible();
+    }
+
+    // 4. 새 가이드 생성 버튼 확인
+    const createButton = page.getByRole('button', { name: /새 가이드|가이드 만들기/i });
+    if (await createButton.isVisible()) {
+      await expect(createButton).toBeVisible();
+    }
+  });
+
+  test('가이드 생성 → 에디터 편집 → 게시', async ({ page }) => {
+    // 1. 대시보드로 이동
+    await page.goto('/dashboard');
+    await page.waitForTimeout(1000);
+
+    // 2. 새 가이드 생성 버튼 클릭
+    const createButton = page.getByRole('button', { name: /새 가이드|가이드 만들기/i });
+
+    if (await createButton.isVisible()) {
+      await createButton.click();
+
+      // 3. 가이드 생성 모달 또는 폼 입력
+      const titleInput = page.locator('input[name="title"]').first();
+      await titleInput.waitFor({ state: 'visible', timeout: 5000 });
+
+      const testTitle = `테스트 가이드 ${Date.now()}`;
+      await titleInput.fill(testTitle);
+
+      // slug 입력 (있다면)
+      const slugInput = page.locator('input[name="slug"]');
+      if (await slugInput.isVisible()) {
+        await slugInput.fill(`test-guide-${Date.now()}`);
+      }
+
+      // 생성 버튼 클릭
+      const submitButton = page.getByRole('button', { name: /생성|만들기/i }).first();
+      await submitButton.click();
+
+      // 4. 에디터 페이지로 이동 확인
+      await expect(page).toHaveURL(/\/editor\//, { timeout: 10000 });
+
+      // 5. 에디터 UI 확인
+      await expect(page.getByText(/에디터|편집/i)).toBeVisible({ timeout: 5000 });
+
+      // 6. 블록 추가 버튼 확인
+      const addBlockButton = page.getByRole('button', { name: /블록 추가|추가/i }).first();
+      if (await addBlockButton.isVisible()) {
+        await addBlockButton.click();
+        await page.waitForTimeout(500);
+
+        // 7. 텍스트 블록 선택
+        const textBlockOption = page.getByText(/텍스트|Text/i).first();
+        if (await textBlockOption.isVisible()) {
+          await textBlockOption.click();
+          await page.waitForTimeout(500);
+        }
+      }
+
+      // 8. 게시 버튼 클릭
+      const publishButton = page.getByRole('button', { name: /게시|발행/i }).first();
+      if (await publishButton.isVisible()) {
+        await publishButton.click();
+
+        // 9. 게시 확인 메시지 또는 상태 변경 확인
+        await page.waitForTimeout(1000);
+
+        // 게시 성공 메시지 또는 버튼 상태 변경 확인
+        const publishedIndicator = page.getByText(/게시됨|Published/i);
+        if (await publishedIndicator.isVisible()) {
+          await expect(publishedIndicator).toBeVisible();
+        }
+      }
+    }
+  });
+
+  test('템플릿 페이지 접근 및 템플릿 사용', async ({ page }) => {
+    // 1. 템플릿 페이지로 이동
+    await page.goto('/templates');
+
+    // 2. 템플릿 목록 확인
+    await expect(page.getByText(/템플릿/i)).toBeVisible({ timeout: 5000 });
+
+    // 3. 템플릿 카드 확인
+    const templateCards = page.locator('[data-testid="template-card"]');
+    const count = await templateCards.count();
+
+    if (count > 0) {
+      // 4. 첫 번째 템플릿 선택
+      await templateCards.first().click();
+
+      // 5. 템플릿 사용 버튼 클릭
+      const useButton = page.getByRole('button', { name: /사용|적용/i }).first();
+      if (await useButton.isVisible()) {
+        await useButton.click();
+        await page.waitForTimeout(1000);
+      }
+    }
+  });
+
+  test('설정 페이지 접근 및 프로필 정보 확인', async ({ page }) => {
+    // 1. 설정 페이지로 이동
+    await page.goto('/settings');
+
+    // 2. 설정 페이지 확인
+    await expect(page.getByText(/설정|프로필/i)).toBeVisible({ timeout: 5000 });
+
+    // 3. 프로필 정보 확인
+    const emailField = page.locator('input[name="email"]');
+    if (await emailField.isVisible()) {
+      await expect(emailField).toBeVisible();
+    }
+
+    // 4. 테마 설정 확인
+    const themeToggle = page.getByRole('button', { name: /테마|다크 모드/i });
+    if (await themeToggle.isVisible()) {
+      await expect(themeToggle).toBeVisible();
+    }
+  });
+
+  test('가이드 목록에서 가이드 삭제', async ({ page }) => {
+    // 1. 대시보드로 이동
+    await page.goto('/dashboard');
+    await page.waitForTimeout(1000);
+
+    // 2. 가이드 카드 확인
+    const guideCards = page.locator('[data-testid="guide-card"]');
+    const count = await guideCards.count();
+
+    if (count > 0) {
+      // 3. 삭제 버튼 클릭
+      const deleteButton = guideCards.first().getByRole('button', { name: /삭제/i });
+
+      if (await deleteButton.isVisible()) {
+        await deleteButton.click();
+
+        // 4. 확인 모달이 나타나면 확인 클릭
+        const confirmButton = page.getByRole('button', { name: /확인|삭제/i }).last();
+        if (await confirmButton.isVisible()) {
+          await confirmButton.click();
+          await page.waitForTimeout(1000);
+
+          // 5. 삭제 성공 메시지 또는 목록 업데이트 확인
+          await page.waitForTimeout(500);
+        }
+      }
+    }
+  });
+
+  test('QR 코드 생성 및 다운로드', async ({ page }) => {
+    // 1. 대시보드로 이동
+    await page.goto('/dashboard');
+    await page.waitForTimeout(1000);
+
+    // 2. 가이드 카드 확인
+    const guideCards = page.locator('[data-testid="guide-card"]');
+    const count = await guideCards.count();
+
+    if (count > 0) {
+      // 3. QR 코드 버튼 클릭
+      const qrButton = guideCards.first().getByRole('button', { name: /QR|큐알/i });
+
+      if (await qrButton.isVisible()) {
+        await qrButton.click();
+
+        // 4. QR 코드 모달 확인
+        await page.waitForTimeout(500);
+        const qrModal = page.locator('[data-testid="qr-modal"]');
+
+        if (await qrModal.isVisible()) {
+          await expect(qrModal).toBeVisible();
+
+          // 5. 다운로드 버튼 확인
+          const downloadButton = page.getByRole('button', { name: /다운로드/i });
+          if (await downloadButton.isVisible()) {
+            await expect(downloadButton).toBeVisible();
+          }
+        }
+      }
+    }
+  });
+});

@@ -1,20 +1,32 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-if (!process.env.GOOGLE_AI_API_KEY) {
-  throw new Error("GOOGLE_AI_API_KEY environment variable is required");
+// Lazy initialization - 빌드 타임이 아닌 런타임에만 체크
+let genAI: GoogleGenerativeAI | null = null;
+
+function getGeminiClient() {
+  if (!genAI) {
+    const apiKey = process.env.GOOGLE_AI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GOOGLE_AI_API_KEY environment variable is required");
+    }
+    genAI = new GoogleGenerativeAI(apiKey);
+  }
+  return genAI;
 }
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
-
-export const geminiModel = genAI.getGenerativeModel({
-  model: "gemini-2.0-flash-exp",
-});
+export const geminiModel = {
+  get instance() {
+    return getGeminiClient().getGenerativeModel({
+      model: "gemini-2.0-flash-exp",
+    });
+  },
+};
 
 export async function generateStreamingResponse(
   systemPrompt: string,
   userMessage: string
 ): Promise<ReadableStream<Uint8Array>> {
-  const chat = geminiModel.startChat({
+  const chat = geminiModel.instance.startChat({
     history: [
       {
         role: "user",
