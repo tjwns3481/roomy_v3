@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
-import { X } from 'lucide-react';
 import { StoryProgress } from './StoryProgress';
 
 interface Story {
@@ -227,7 +226,7 @@ export function StoryViewer({
             className="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
             aria-label="닫기"
           >
-            <X className="w-6 h-6" />
+            <span className="material-symbols-outlined text-2xl">close</span>
           </button>
 
           {/* 스토리 컨텐츠 */}

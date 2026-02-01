@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { UserButton } from '@clerk/nextjs';
 import { StatsCard, GuideCard, EmptyState, NewGuideCard } from '@/components/dashboard';
 import type { GuideCardData } from '@/types/dashboard';
 
@@ -91,11 +92,14 @@ export default function DashboardPage() {
           <button className="flex items-center justify-center rounded-full p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors">
             <span className="material-symbols-outlined">notifications</span>
           </button>
-          <div className="h-10 w-10 overflow-hidden rounded-full border border-slate-200 dark:border-slate-700 bg-slate-200 dark:bg-slate-700">
-            <div className="h-full w-full flex items-center justify-center">
-              <span className="material-symbols-outlined text-slate-500">person</span>
-            </div>
-          </div>
+          <UserButton
+            afterSignOutUrl="/"
+            appearance={{
+              elements: {
+                avatarBox: "h-10 w-10",
+              },
+            }}
+          />
         </div>
       </header>
 

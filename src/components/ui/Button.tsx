@@ -1,7 +1,7 @@
 import React from "react";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "ghost" | "danger";
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "secondary" | "ghost" | "danger" | "outline" | "kakao";
   size?: "sm" | "md" | "lg";
   children: React.ReactNode;
   isLoading?: boolean;
@@ -12,10 +12,14 @@ const variantStyles = {
     "bg-[#2b9dee] hover:bg-[#2b9dee]/90 text-white font-bold shadow-sm",
   secondary:
     "bg-[#f0f3f4] hover:bg-[#e5e7eb] dark:bg-[#2d3748] dark:hover:bg-[#374151] text-[#111518] dark:text-white font-semibold",
+  outline:
+    "bg-transparent border-2 border-[#2b9dee] text-[#2b9dee] hover:bg-[#2b9dee]/10 font-semibold",
   ghost:
     "bg-transparent text-[#617989] dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 font-semibold",
   danger:
     "bg-red-600 hover:bg-red-700 text-white font-bold shadow-sm",
+  kakao:
+    "bg-[#FEE500] hover:bg-[#FDD835] text-[#3C1E1E] font-bold shadow-sm",
 };
 
 const sizeStyles = {
