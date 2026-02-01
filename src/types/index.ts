@@ -140,6 +140,18 @@ export interface Visit {
   created_at: string;
 }
 
+// Template
+export interface Template {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  thumbnail: string;
+  is_popular?: boolean;
+  is_available: boolean;
+  blocks: ContentBlock[];
+}
+
 // API Response
 export interface ApiResponse<T> {
   success: boolean;

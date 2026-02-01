@@ -9,6 +9,7 @@ import {
   generateSlug,
 } from "@/lib/validations/guide";
 import type { Guide, ApiResponse } from "@/types";
+import { templates } from "@/data/templates";
 
 /**
  * GET /api/guides
@@ -182,7 +183,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { accommodation_id, title, slug: customSlug } = parseResult.data;
+    const {
+      accommodation_id,
+      title,
+      slug: customSlug,
+      template_id,
+    } = parseResult.data;
 
     // 3. Supabase 클라이언트 생성
     const supabase = await createClient();
@@ -206,41 +212,81 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 5. 숙소 소유권 확인
-    const { data: accommodation, error: accError } = await supabase
-      .from("accommodations")
-      .select("id, user_id")
-      .eq("id", accommodation_id)
-      .single();
+    // 5. 템플릿 기반 초기값 설정
+    let initialTitle = title || "새 가이드";
+    let initialBlocks: any[] = [];
+    let selectedTemplate = null;
 
-    if (accError || !accommodation) {
-      return NextResponse.json<ApiResponse<null>>(
-        {
-          success: false,
-          error: {
-            code: "NOT_FOUND",
-            message: "존재하지 않는 숙소입니다",
-          },
-        },
-        { status: 404 }
-      );
+    if (template_id) {
+      selectedTemplate = templates.find((t) => t.id === template_id);
+      if (selectedTemplate) {
+        initialTitle = selectedTemplate.name + " 가이드";
+        initialBlocks = selectedTemplate.blocks;
+      }
     }
 
-    if (accommodation.user_id !== user.id) {
-      return NextResponse.json<ApiResponse<null>>(
-        {
-          success: false,
-          error: {
-            code: "FORBIDDEN",
-            message: "접근 권한이 없는 숙소입니다",
+    // 6. 첫 번째 숙소 가져오기 또는 숙소 확인
+    let finalAccommodationId = accommodation_id;
+
+    if (!finalAccommodationId) {
+      // accommodation_id가 없으면 사용자의 첫 번째 숙소 사용
+      const { data: accommodations, error: accListError } = await supabase
+        .from("accommodations")
+        .select("id")
+        .eq("user_id", user.id)
+        .limit(1);
+
+      if (accListError || !accommodations || accommodations.length === 0) {
+        return NextResponse.json<ApiResponse<null>>(
+          {
+            success: false,
+            error: {
+              code: "NOT_FOUND",
+              message: "숙소를 먼저 생성해주세요",
+            },
           },
-        },
-        { status: 403 }
-      );
+          { status: 404 }
+        );
+      }
+
+      finalAccommodationId = accommodations[0].id;
+    } else {
+      // accommodation_id가 있으면 소유권 확인
+      const { data: accommodation, error: accError } = await supabase
+        .from("accommodations")
+        .select("id, user_id")
+        .eq("id", finalAccommodationId)
+        .single();
+
+      if (accError || !accommodation) {
+        return NextResponse.json<ApiResponse<null>>(
+          {
+            success: false,
+            error: {
+              code: "NOT_FOUND",
+              message: "존재하지 않는 숙소입니다",
+            },
+          },
+          { status: 404 }
+        );
+      }
+
+      if (accommodation.user_id !== user.id) {
+        return NextResponse.json<ApiResponse<null>>(
+          {
+            success: false,
+            error: {
+              code: "FORBIDDEN",
+              message: "접근 권한이 없는 숙소입니다",
+            },
+          },
+          { status: 403 }
+        );
+      }
     }
 
-    // 6. Slug 생성 또는 검증
-    let slug = customSlug || generateSlug(title);
+    // 7. Slug 생성 또는 검증
+    let slug = customSlug || generateSlug(initialTitle);
 
     // Slug 중복 확인
     const { data: existingGuide } = await supabase
@@ -255,14 +301,14 @@ export async function POST(request: NextRequest) {
       slug = `${slug}-${randomSuffix}`;
     }
 
-    // 7. 가이드 생성
+    // 8. 가이드 생성
     const { data: newGuide, error: createError } = await supabase
       .from("guides")
       .insert({
-        accommodation_id,
-        title,
+        accommodation_id: finalAccommodationId,
+        title: initialTitle,
         slug,
-        content_blocks: [],
+        content_blocks: initialBlocks,
         wifi_ssid: null,
         wifi_password: null,
         is_published: false,
@@ -285,11 +331,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 8. 성공 응답
-    return NextResponse.json<ApiResponse<{ guide: Guide }>>(
+    // 9. 성공 응답
+    return NextResponse.json<ApiResponse<Guide>>(
       {
         success: true,
-        data: { guide: newGuide },
+        data: newGuide,
       },
       { status: 201 }
     );
