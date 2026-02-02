@@ -3,21 +3,31 @@
 import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { PreviewPanel } from "./PreviewPanel";
-import { BlockType, ContentBlock } from "@/types";
+import { EditorPhonePreview } from "./EditorPhonePreview";
+import { BlockType, ContentBlock, Story } from "@/types";
 
 interface EditorLayoutProps {
   guideId: string;
+  guideTitle?: string;
+  guideSlug?: string;
+  heroImage?: string;
   initialBlocks?: ContentBlock[];
+  initialStories?: Story[];
   children?: React.ReactNode;
 }
 
 export function EditorLayout({
   guideId,
+  guideTitle = "제주 풀빌라 가이드",
+  guideSlug = "preview",
+  heroImage,
   initialBlocks = [],
+  initialStories = [],
   children,
 }: EditorLayoutProps) {
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [blocks, setBlocks] = useState<ContentBlock[]>(initialBlocks);
+  const [stories, setStories] = useState<Story[]>(initialStories);
   const [deviceMode, setDeviceMode] = useState<"mobile" | "desktop">("mobile");
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">(
     "saved"
@@ -30,6 +40,47 @@ export function EditorLayout({
 
   const handleSelectBlock = (blockId: string) => {
     setSelectedBlockId(blockId);
+  };
+
+  const handleBlocksReorder = (reorderedBlocks: ContentBlock[]) => {
+    setBlocks(reorderedBlocks);
+    setSaveStatus("unsaved");
+    // TODO: Save to backend
+  };
+
+  const handleBlockDelete = (blockId: string) => {
+    setBlocks((prev) => prev.filter((b) => b.id !== blockId));
+    setSaveStatus("unsaved");
+    // TODO: Save to backend
+  };
+
+  const handleBlockDuplicate = (blockId: string) => {
+    const blockToDuplicate = blocks.find((b) => b.id === blockId);
+    if (blockToDuplicate) {
+      const newBlock = {
+        ...blockToDuplicate,
+        id: `${blockToDuplicate.id}-copy-${Date.now()}`,
+        order: blocks.length,
+      };
+      setBlocks((prev) => [...prev, newBlock]);
+      setSaveStatus("unsaved");
+      // TODO: Save to backend
+    }
+  };
+
+  const handleStoryClick = (storyId: string) => {
+    console.log("Story clicked:", storyId);
+    // TODO: Open story editor panel
+  };
+
+  const handleHeroClick = () => {
+    console.log("Hero clicked");
+    // TODO: Open hero editor panel
+  };
+
+  const handleQuickAccessClick = (type: string) => {
+    console.log("Quick access clicked:", type);
+    // TODO: Scroll to relevant block
   };
 
   return (
@@ -47,7 +98,7 @@ export function EditorLayout({
           <input
             className="bg-transparent border-none text-lg font-bold text-slate-800 dark:text-white focus:ring-0 p-0 hover:text-blue-500 transition-colors cursor-text truncate w-full"
             type="text"
-            defaultValue="제주 풀빌라 가이드"
+            defaultValue={guideTitle}
           />
         </div>
 
@@ -153,45 +204,24 @@ export function EditorLayout({
             </button>
           </div>
 
-          {/* Mobile Device Frame */}
-          <div
-            className={`relative ${
-              deviceMode === "mobile"
-                ? "w-[375px] h-full max-h-[812px]"
-                : "w-full h-full max-w-[1200px] max-h-[800px]"
-            } bg-white dark:bg-black rounded-[${deviceMode === "mobile" ? "3rem" : "1rem"}] shadow-2xl ${
-              deviceMode === "mobile"
-                ? "border-[8px] border-slate-900 dark:border-slate-800"
-                : "border border-slate-300 dark:border-slate-700"
-            } overflow-hidden ring-1 ring-slate-900/5 shrink-0 transition-all duration-300`}
-          >
-            {/* Notch (mobile only) */}
-            {deviceMode === "mobile" && (
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-7 bg-slate-900 rounded-b-xl z-20"></div>
-            )}
-
-            {/* Screen Content */}
-            <div className="h-full w-full overflow-y-auto bg-slate-50 relative pb-10">
-              {children}
-
-              {/* Default placeholder if no children */}
-              {!children && (
-                <div className="flex flex-col items-center justify-center h-full text-center p-8">
-                  <span className="material-symbols-outlined text-slate-300 text-[64px] mb-4">
-                    add_box
-                  </span>
-                  <p className="text-slate-400 text-sm">
-                    왼쪽 사이드바에서 블록을 추가하여 가이드를 만들어보세요
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Bottom Bar Indicator (mobile only) */}
-            {deviceMode === "mobile" && (
-              <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-slate-900 dark:bg-slate-700 rounded-full z-20"></div>
-            )}
-          </div>
+          {/* EditorPhonePreview */}
+          <EditorPhonePreview
+            blocks={blocks}
+            stories={stories}
+            heroImage={heroImage}
+            heroTitle={guideTitle}
+            heroSubtitle="환영합니다!"
+            deviceMode={deviceMode}
+            slug={guideSlug}
+            selectedBlockId={selectedBlockId}
+            onBlockSelect={handleSelectBlock}
+            onBlocksReorder={handleBlocksReorder}
+            onBlockDelete={handleBlockDelete}
+            onBlockDuplicate={handleBlockDuplicate}
+            onStoryClick={handleStoryClick}
+            onHeroClick={handleHeroClick}
+            onQuickAccessClick={handleQuickAccessClick}
+          />
         </main>
 
         {/* Right Sidebar: Properties Panel */}
