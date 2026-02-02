@@ -8,6 +8,18 @@ interface RulesBlockProps {
   slug: string;
 }
 
+// 아이콘 이름 정규화 (대문자 → 소문자, 잘못된 이름 → 올바른 이름)
+const normalizeIconName = (icon: string | undefined): string | null => {
+  if (!icon) return null;
+  const lower = icon.toLowerCase();
+  // 잘못된 아이콘 이름 매핑
+  const iconMap: Record<string, string> = {
+    'no_smoking': 'smoke_free',
+    'smoking_rooms': 'smoke_free',
+  };
+  return iconMap[lower] || lower;
+};
+
 export function RulesBlock({ data, slug }: RulesBlockProps) {
   // Show only first 3 rules in preview
   const displayItems = data.items.slice(0, 3);
@@ -16,13 +28,13 @@ export function RulesBlock({ data, slug }: RulesBlockProps) {
   const getIconForCategory = (category?: string) => {
     switch (category) {
       case 'checkin':
-        return '🔑';
+        return 'schedule';
       case 'guide':
-        return '📋';
+        return 'info';
       case 'notice':
-        return '⚠️';
+        return 'warning';
       default:
-        return '•';
+        return 'check_circle';
     }
   };
 
@@ -46,8 +58,8 @@ export function RulesBlock({ data, slug }: RulesBlockProps) {
       <ul className="space-y-3 mb-4">
         {displayItems.map((item) => (
           <li key={item.id} className="flex items-start gap-3">
-            <span className="text-xl flex-shrink-0 mt-0.5">
-              {item.icon || getIconForCategory(item.category)}
+            <span className="material-symbols-outlined text-xl text-primary flex-shrink-0 mt-0.5">
+              {normalizeIconName(item.icon) || getIconForCategory(item.category)}
             </span>
             <span className="text-gray-700 leading-relaxed">
               {item.text}
