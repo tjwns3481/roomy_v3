@@ -3,6 +3,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getAuthUser } from "@/lib/auth";
 import {
   createGuideSchema,
   listGuidesQuerySchema,
@@ -18,16 +19,10 @@ import { templates } from "@/data/templates";
  */
 export async function GET(request: NextRequest) {
   try {
-    // 1. Supabase 클라이언트 생성
-    const supabase = await createClient();
+    // 1. Clerk 인증 확인
+    const user = await getAuthUser();
 
-    // 2. 인증 확인
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
+    if (!user) {
       return NextResponse.json<ApiResponse<null>>(
         {
           success: false,
@@ -40,8 +35,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // 2. Supabase 클라이언트 생성
+    const supabase = await createClient();
+
     // 3. 쿼리 파라미터 파싱
     const { searchParams } = new URL(request.url);
+    const supabaseUserId = user.id;
     const queryParams = {
       accommodation_id: searchParams.get("accommodation_id") || undefined,
     };
@@ -65,7 +64,7 @@ export async function GET(request: NextRequest) {
     const { data: accommodations, error: accError } = await supabase
       .from("accommodations")
       .select("id")
-      .eq("user_id", user.id);
+      .eq("user_id", supabaseUserId);
 
     if (accError) {
       console.error("Accommodations fetch error:", accError);
@@ -190,16 +189,10 @@ export async function POST(request: NextRequest) {
       template_id,
     } = parseResult.data;
 
-    // 3. Supabase 클라이언트 생성
-    const supabase = await createClient();
+    // 3. Clerk 인증 확인
+    const user = await getAuthUser();
 
-    // 4. 인증 확인
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
+    if (!user) {
       return NextResponse.json<ApiResponse<null>>(
         {
           success: false,
@@ -211,6 +204,10 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
+
+    // 4. Supabase 클라이언트 생성
+    const supabase = await createClient();
+    const supabaseUserId = user.id;
 
     // 5. 템플릿 기반 초기값 설정
     let initialTitle = title || "새 가이드";
@@ -233,7 +230,7 @@ export async function POST(request: NextRequest) {
       const { data: accommodations, error: accListError } = await supabase
         .from("accommodations")
         .select("id")
-        .eq("user_id", user.id)
+        .eq("user_id", supabaseUserId)
         .limit(1);
 
       if (accListError || !accommodations || accommodations.length === 0) {
@@ -271,7 +268,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      if (accommodation.user_id !== user.id) {
+      if (accommodation.user_id !== supabaseUserId) {
         return NextResponse.json<ApiResponse<null>>(
           {
             success: false,

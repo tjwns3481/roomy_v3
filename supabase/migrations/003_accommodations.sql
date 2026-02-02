@@ -36,25 +36,17 @@ create trigger handle_accommodations_updated_at
 -- Enable row level security
 alter table public.accommodations enable row level security;
 
--- Create RLS policies for accommodations table
+-- Drop existing policies if any
+drop policy if exists "Users can view their own accommodations" on public.accommodations;
+drop policy if exists "Authenticated users can create accommodations" on public.accommodations;
+drop policy if exists "Users can update their own accommodations" on public.accommodations;
+drop policy if exists "Users can delete their own accommodations" on public.accommodations;
+drop policy if exists "Allow all for service role" on public.accommodations;
 
--- SELECT: Only the owner can view their accommodations
-create policy "Users can view their own accommodations"
-  on public.accommodations for select
-  using (auth.uid() = user_id);
-
--- INSERT: Authenticated users can create accommodations
-create policy "Authenticated users can create accommodations"
-  on public.accommodations for insert
-  with check (auth.uid() is not null and auth.uid() = user_id);
-
--- UPDATE: Only the owner can update their accommodations
-create policy "Users can update their own accommodations"
-  on public.accommodations for update
-  using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
-
--- DELETE: Only the owner can delete their accommodations
-create policy "Users can delete their own accommodations"
-  on public.accommodations for delete
-  using (auth.uid() = user_id);
+-- Allow service role full access (for API routes)
+-- Note: With Clerk authentication, authorization is handled at the application level
+create policy "Allow all for service role"
+  on public.accommodations
+  for all
+  using (true)
+  with check (true);

@@ -7,12 +7,12 @@ test.describe('인증 흐름', () => {
   });
 
   test('회원가입 → 자동 로그인 → 대시보드 리다이렉트', async ({ page }) => {
-    // 1. 회원가입 페이지로 이동
-    await page.goto('/signup');
+    // 1. 회원가입 페이지로 이동 (Clerk 커스텀 UI)
+    await page.goto('/sign-up');
     await page.waitForTimeout(2000);
 
-    // 2. 회원가입 폼이 표시되는지 확인 (h1 또는 폼)
-    const signupHeading = page.getByRole('heading', { name: /회원가입/i });
+    // 2. 회원가입 폼이 표시되는지 확인
+    const signupHeading = page.getByRole('heading', { name: /무료로 시작하기/i });
     const isHeadingVisible = await signupHeading.isVisible({ timeout: 5000 }).catch(() => false);
 
     if (!isHeadingVisible) {
@@ -36,24 +36,29 @@ test.describe('인증 흐름', () => {
     await page.fill('input[name="password"]', password);
     await page.fill('input[name="confirmPassword"]', password);
 
-    // 5. 회원가입 버튼 클릭
+    // 5. 이용약관 동의 체크
+    const termsCheckbox = page.locator('input#terms');
+    if (await termsCheckbox.isVisible()) {
+      await termsCheckbox.check();
+    }
+
+    // 6. 회원가입 버튼 클릭
     await page.click('button[type="submit"]');
     await page.waitForTimeout(2000);
 
-    // 6. 대시보드로 리다이렉트 확인 (또는 폼 유효성 검사 에러)
+    // 7. 대시보드로 리다이렉트 확인 (또는 이메일 인증 화면)
     const url = page.url();
     if (url.includes('/dashboard')) {
-      // 실제 인증 구현 시 대시보드로 이동
       await expect(page.getByText(/내 가이드/i)).toBeVisible();
     } else {
-      // 인증 미구현 시 회원가입 페이지에 머무름 - 폼 기능 테스트 통과
-      expect(url).toContain('/signup');
+      // 이메일 인증 화면이나 회원가입 페이지에 머무름 - 폼 기능 테스트 통과
+      expect(url).toMatch(/\/sign-up|이메일 인증/);
     }
   });
 
   test('로그인 → 대시보드 이동', async ({ page }) => {
-    // 1. 로그인 페이지로 이동
-    await page.goto('/login');
+    // 1. 로그인 페이지로 이동 (Clerk 커스텀 UI)
+    await page.goto('/sign-in');
     await page.waitForTimeout(2000);
 
     // 2. 로그인 폼이 로딩되었는지 확인
@@ -78,12 +83,11 @@ test.describe('인증 흐름', () => {
     await page.click('button[type="submit"]');
 
     // 6. 대시보드로 리다이렉트 확인 (또는 에러 메시지 확인)
-    // 계정이 없을 경우 에러가 표시될 수 있음
     await page.waitForTimeout(2000);
 
     // URL이 변경되었거나 에러 메시지가 있는지 확인
     const url = page.url();
-    const hasError = await page.getByText(/이메일|비밀번호|에러/i).isVisible().catch(() => false);
+    const hasError = await page.getByText(/이메일|비밀번호|에러|실패/i).isVisible().catch(() => false);
 
     if (url.includes('/dashboard')) {
       await expect(page.getByText(/내 가이드/i)).toBeVisible();
@@ -93,26 +97,29 @@ test.describe('인증 흐름', () => {
     }
   });
 
-  test('로그아웃', async ({ page, context }) => {
+  test('로그아웃', async ({ page }) => {
     // 1. 로그인된 상태 시뮬레이션
-    // 실제로는 먼저 로그인 과정을 거쳐야 함
     await page.goto('/dashboard');
+    await page.waitForTimeout(2000);
 
     // 2. 로그인되지 않았다면 로그인 페이지로 리다이렉트될 것
     const url = page.url();
 
-    if (url.includes('/login')) {
-      // 로그인 필요
+    if (url.includes('/sign-in')) {
+      // 로그인 필요 - 보호된 라우트가 정상 작동
       test.skip();
     } else {
-      // 3. 로그아웃 버튼 찾기 및 클릭
-      const logoutButton = page.getByRole('button', { name: /로그아웃/i });
+      // 3. 로그아웃 버튼 찾기 (Clerk UserButton)
+      const userButton = page.locator('.cl-userButtonTrigger, [data-clerk-component]');
 
-      if (await logoutButton.isVisible()) {
-        await logoutButton.click();
+      if (await userButton.isVisible().catch(() => false)) {
+        await userButton.click();
 
-        // 4. 홈페이지로 리다이렉트 확인
-        await expect(page).toHaveURL('/', { timeout: 5000 });
+        const signOutButton = page.getByRole('menuitem', { name: /로그아웃|Sign out/i });
+        if (await signOutButton.isVisible().catch(() => false)) {
+          await signOutButton.click();
+          await expect(page).toHaveURL('/', { timeout: 5000 });
+        }
       }
     }
   });
@@ -124,9 +131,9 @@ test.describe('인증 흐름', () => {
 
     // 2. 로그인 페이지로 리다이렉트되는지 확인 (또는 대시보드 표시)
     const url = page.url();
-    // 인증 미들웨어가 없으면 대시보드가 바로 표시될 수 있음
-    if (url.includes('/login')) {
-      await expect(page).toHaveURL(/\/login/, { timeout: 5000 });
+    // 인증 미들웨어가 /sign-in으로 리다이렉트
+    if (url.includes('/sign-in')) {
+      await expect(page).toHaveURL(/\/sign-in/, { timeout: 5000 });
     } else {
       // 인증 미들웨어 없이 대시보드 접근 가능 - 테스트 통과로 처리
       await expect(page.getByText(/Roomy|내 가이드/i).first()).toBeVisible({ timeout: 5000 });
@@ -138,8 +145,8 @@ test.describe('인증 흐름', () => {
 
     // 4. 로그인 리다이렉트 또는 에디터/404 표시
     const editorUrl = page.url();
-    if (editorUrl.includes('/login')) {
-      await expect(page).toHaveURL(/\/login/, { timeout: 5000 });
+    if (editorUrl.includes('/sign-in')) {
+      await expect(page).toHaveURL(/\/sign-in/, { timeout: 5000 });
     } else {
       // 에디터 또는 404 페이지 - 테스트 통과
       expect(true).toBe(true);
