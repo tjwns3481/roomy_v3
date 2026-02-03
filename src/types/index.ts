@@ -1,6 +1,7 @@
 // User
 export interface User {
   id: string;
+  clerk_id: string;
   email: string;
   name: string | null;
   role: "host" | "admin";
@@ -64,7 +65,10 @@ export type BlockData =
   | PlacesBlockData
   | TextBlockData
   | ImageBlockData
-  | GalleryBlockData;
+  | GalleryBlockData
+  | VideoBlockData
+  | MapBlockData
+  | ContactBlockData;
 
 export interface WifiBlockData {
   ssid: string;
@@ -87,6 +91,7 @@ export interface RulesBlockData {
 }
 
 export interface DevicesBlockData {
+  title?: string;
   items: DeviceItem[];
 }
 
@@ -133,6 +138,26 @@ export interface GalleryImage {
   order: number;
 }
 
+export interface VideoBlockData {
+  url: string;
+  caption?: string;
+  autoplay?: boolean;
+}
+
+export interface MapBlockData {
+  latitude: number;
+  longitude: number;
+  zoom?: number;
+  address?: string;
+}
+
+export interface ContactBlockData {
+  name: string;
+  phone: string;
+  email?: string;
+  kakaoId?: string;
+}
+
 // Story
 export interface Story {
   id: string;
@@ -170,8 +195,10 @@ export interface Template {
   category: string;
   description: string;
   thumbnail: string;
+  heroImage?: string; // 히어로 이미지 URL
   is_popular?: boolean;
   is_available: boolean;
+  showStory?: boolean; // 스토리 영역 표시 여부
   blocks: ContentBlock[];
 }
 

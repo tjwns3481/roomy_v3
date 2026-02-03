@@ -17,7 +17,7 @@ type CategoryFilter = 'all' | 'restaurant' | 'cafe' | 'attraction' | 'etc';
 
 export function PlacesContent({
   slug,
-  guideTitle,
+  guideTitle: _guideTitle, // Reserved for future use
   accommodationName,
   places,
   center,
@@ -121,7 +121,7 @@ export function PlacesContent({
           <div className="flex items-center gap-3">
             {/* 뒤로가기 버튼 */}
             <Link
-              href={`/g/${slug}`}
+              href={`/stay/${slug}`}
               className="p-2 -ml-2 hover:bg-slate-100 rounded-lg transition-colors"
             >
               <svg

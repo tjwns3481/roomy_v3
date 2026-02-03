@@ -93,7 +93,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     // 3. guide 관계 제거 후 반환
-    const { guide: _, ...storyData } = story;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { guide: _unused, ...storyData } = story;
 
     return NextResponse.json<ApiResponse<{ story: Story }>>(
       {

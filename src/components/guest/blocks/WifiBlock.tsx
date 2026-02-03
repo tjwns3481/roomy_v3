@@ -21,101 +21,54 @@ export function WifiBlock({ data }: WifiBlockProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-      <div className="flex items-start gap-4">
-        {/* WiFi Icon */}
-        <div className="flex-shrink-0 w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
-          <svg
-            className="w-7 h-7 text-blue-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"
-            />
-          </svg>
+    <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-200 dark:border-slate-700">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+          <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 text-xl">
+            wifi
+          </span>
         </div>
-
-        <div className="flex-1 min-w-0">
-          {/* SSID */}
-          <h3 className="text-lg font-bold text-gray-900 mb-1">
-            WiFi 네트워크
-          </h3>
-          <p className="text-2xl font-bold text-gray-900 mb-3">
-            {data.ssid}
+        <div>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Wi-Fi</p>
+          <p className="text-base font-semibold text-slate-900 dark:text-white">
+            {data.ssid || "네트워크 이름"}
           </p>
-
-          {/* Password Section */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">비밀번호</span>
-              {data.networkType && (
-                <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">
-                  {data.networkType}
-                </span>
-              )}
-            </div>
-
-            <div className="flex items-center gap-2">
-              <code className="flex-1 text-lg font-mono bg-gray-50 px-4 py-3 rounded-lg border border-gray-200 text-gray-900">
-                {data.password}
-              </code>
-
-              <button
-                onClick={handleCopyPassword}
-                className="flex-shrink-0 px-4 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
-              >
-                {copied ? (
-                  <span className="flex items-center gap-2">
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    복사됨
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-2">
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                      />
-                    </svg>
-                    복사
-                  </span>
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Note */}
-          {data.note && (
-            <p className="mt-3 text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-lg">
-              {data.note}
-            </p>
-          )}
         </div>
+        {data.networkType && (
+          <span className="ml-auto text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">
+            {data.networkType}
+          </span>
+        )}
       </div>
+
+      {/* Password */}
+      <div className="flex items-center gap-2">
+        <div className="flex-1 bg-slate-50 dark:bg-slate-900 rounded-lg px-3 py-2.5 border border-slate-200 dark:border-slate-700">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mb-0.5">비밀번호</p>
+          <code className="text-sm font-mono font-medium text-slate-900 dark:text-white select-all">
+            {data.password || "비밀번호 없음"}
+          </code>
+        </div>
+        <button
+          onClick={handleCopyPassword}
+          disabled={!data.password}
+          className={`h-full px-4 py-3 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 ${
+            copied
+              ? 'bg-green-500 text-white'
+              : 'bg-slate-900 dark:bg-slate-600 text-white hover:bg-slate-800 dark:hover:bg-slate-500'
+          }`}
+        >
+          {copied ? '복사됨' : '복사'}
+        </button>
+      </div>
+
+      {/* Note */}
+      {data.note && (
+        <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+          {data.note}
+        </p>
+      )}
     </div>
   );
 }

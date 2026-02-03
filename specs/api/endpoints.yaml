@@ -1,0 +1,282 @@
+# Roomy v3 - API Endpoints (Finalized)
+# Version: 1.0
+# Finalized: 2026-02-03
+
+base_url: "/api"
+version: "1.0"
+
+endpoints:
+  # ===== Guide CRUD =====
+  list_guides:
+    method: GET
+    path: /api/guides
+    description: "현재 인증된 사용자의 가이드 목록 반환"
+    auth: required
+    parameters:
+      - name: accommodation_id
+        in: query
+        type: string (UUID)
+        required: false
+    responses:
+      200: { schema: "ApiResponse<{ guides: Guide[] }>" }
+      401: { code: UNAUTHORIZED }
+      500: { code: DB_ERROR }
+    _reverse_meta:
+      source: "src/app/api/guides/route.ts"
+      confidence: 1.0
+
+  create_guide:
+    method: POST
+    path: /api/guides
+    description: "새 가이드 생성 (선택적 템플릿 적용)"
+    auth: required
+    request_body:
+      accommodation_id: { type: "UUID", required: false }
+      title: { type: "string", required: false, default: "새 가이드" }
+      slug: { type: "string", required: false }
+      template_id: { type: "string", required: false }
+    responses:
+      201: { schema: "ApiResponse<Guide>" }
+      400: { code: VALIDATION_ERROR }
+      401: { code: UNAUTHORIZED }
+      404: { code: NOT_FOUND, message: "숙소를 찾을 수 없음" }
+    _reverse_meta:
+      source: "src/app/api/guides/route.ts"
+      confidence: 1.0
+
+  get_guide:
+    method: GET
+    path: /api/guides/{id}
+    description: "단일 가이드 조회 (공개 가이드는 조회수 증가)"
+    auth: optional
+    parameters:
+      - name: id
+        in: path
+        type: UUID
+        required: true
+    responses:
+      200: { schema: "ApiResponse<{ guide: Guide }>" }
+      401: { code: UNAUTHORIZED, when: "비공개 가이드" }
+      403: { code: FORBIDDEN }
+      404: { code: NOT_FOUND }
+    _reverse_meta:
+      source: "src/app/api/guides/[id]/route.ts"
+      confidence: 1.0
+
+  update_guide:
+    method: PATCH
+    path: /api/guides/{id}
+    description: "가이드 수정 (소유자만)"
+    auth: required
+    request_body:
+      title: { type: "string", required: false }
+      content_blocks: { type: "ContentBlock[]", required: false }
+      wifi_ssid: { type: "string | null", required: false }
+      wifi_password: { type: "string | null", required: false }
+    responses:
+      200: { schema: "ApiResponse<{ guide: Guide }>" }
+      400: { code: VALIDATION_ERROR }
+      403: { code: FORBIDDEN }
+      404: { code: NOT_FOUND }
+    _reverse_meta:
+      source: "src/app/api/guides/[id]/route.ts"
+      confidence: 1.0
+
+  delete_guide:
+    method: DELETE
+    path: /api/guides/{id}
+    description: "가이드 삭제 (소유자만)"
+    auth: required
+    responses:
+      200: { schema: "ApiResponse<{ message: string }>" }
+      403: { code: FORBIDDEN }
+      404: { code: NOT_FOUND }
+    _reverse_meta:
+      source: "src/app/api/guides/[id]/route.ts"
+      confidence: 1.0
+
+  publish_guide:
+    method: PATCH
+    path: /api/guides/{id}/publish
+    description: "가이드 발행 상태 토글"
+    auth: required
+    request_body:
+      is_published: { type: "boolean", required: true }
+    responses:
+      200: { schema: "ApiResponse<{ guide: Guide }>" }
+      403: { code: FORBIDDEN }
+      404: { code: NOT_FOUND }
+    _reverse_meta:
+      source: "src/app/api/guides/[id]/publish/route.ts"
+      confidence: 1.0
+
+  # ===== Story CRUD =====
+  list_stories:
+    method: GET
+    path: /api/guides/{id}/stories
+    description: "가이드의 스토리 목록 조회"
+    auth: optional
+    responses:
+      200: { schema: "ApiResponse<{ stories: Story[] }>" }
+      404: { code: GUIDE_NOT_FOUND }
+    _reverse_meta:
+      source: "src/app/api/guides/[id]/stories/route.ts"
+      confidence: 1.0
+
+  create_story:
+    method: POST
+    path: /api/guides/{id}/stories
+    description: "새 스토리 생성"
+    auth: required
+    request_body:
+      media_url: { type: "string (URL)", required: true }
+      media_type: { type: "enum(image, video)", required: true }
+      label: { type: "string", required: false }
+    responses:
+      201: { schema: "ApiResponse<{ story: Story }>" }
+      400: { code: VALIDATION_ERROR }
+      403: { code: FORBIDDEN }
+    _reverse_meta:
+      source: "src/app/api/guides/[id]/stories/route.ts"
+      confidence: 1.0
+
+  get_story:
+    method: GET
+    path: /api/stories/{id}
+    description: "단일 스토리 조회"
+    auth: optional
+    responses:
+      200: { schema: "ApiResponse<{ story: Story }>" }
+      404: { code: STORY_NOT_FOUND }
+    _reverse_meta:
+      source: "src/app/api/stories/[id]/route.ts"
+      confidence: 1.0
+
+  update_story:
+    method: PATCH
+    path: /api/stories/{id}
+    description: "스토리 수정"
+    auth: required
+    request_body:
+      label: { type: "string", required: false }
+      order_index: { type: "integer", required: false }
+      media_url: { type: "string (URL)", required: false }
+    responses:
+      200: { schema: "ApiResponse<{ story: Story }>" }
+      403: { code: FORBIDDEN }
+      404: { code: STORY_NOT_FOUND }
+    _reverse_meta:
+      source: "src/app/api/stories/[id]/route.ts"
+      confidence: 1.0
+
+  delete_story:
+    method: DELETE
+    path: /api/stories/{id}
+    description: "스토리 삭제"
+    auth: required
+    responses:
+      200: { schema: "ApiResponse<{ message: string }>" }
+      403: { code: FORBIDDEN }
+      404: { code: STORY_NOT_FOUND }
+    _reverse_meta:
+      source: "src/app/api/stories/[id]/route.ts"
+      confidence: 1.0
+
+  # ===== Upload =====
+  upload_image:
+    method: POST
+    path: /api/upload
+    description: "이미지 파일 업로드 (Supabase Storage)"
+    auth: required
+    request_body:
+      content_type: "multipart/form-data"
+      file: { type: "File", required: true, max_size: "5MB", allowed: ["jpeg", "png", "gif", "webp"] }
+    responses:
+      200: { schema: "{ url: string, path: string }" }
+      400: { message: "No file provided | Invalid file type | File too large" }
+      401: { message: "Unauthorized" }
+    _reverse_meta:
+      source: "src/app/api/upload/route.ts"
+      confidence: 1.0
+
+  # ===== AI Chat =====
+  ai_chat:
+    method: POST
+    path: /api/ai/chat
+    description: "AI 챗봇 스트리밍 응답 (Gemini API)"
+    auth: none
+    request_body:
+      guideId: { type: "UUID", required: true }
+      sessionId: { type: "string", required: true }
+      question: { type: "string", required: true }
+    responses:
+      200:
+        content_type: "text/event-stream"
+        format: "SSE (data: {json}\\n\\n)"
+      400: { message: "guideId, sessionId, and question are required" }
+      404: { message: "Guide not found" }
+    _reverse_meta:
+      source: "src/app/api/ai/chat/route.ts"
+      confidence: 1.0
+
+  # ===== Utility =====
+  fix_icons:
+    method: POST
+    path: /api/fix-icons
+    description: "아이콘 정규화 (관리자 유틸리티)"
+    auth: none
+    responses:
+      200: { schema: "{ success: boolean, message: string, debug: array }" }
+    _reverse_meta:
+      source: "src/app/api/fix-icons/route.ts"
+      confidence: 0.85
+
+schemas:
+  Guide:
+    fields:
+      - { name: id, type: UUID }
+      - { name: accommodation_id, type: UUID }
+      - { name: slug, type: string }
+      - { name: title, type: string }
+      - { name: content_blocks, type: "ContentBlock[]" }
+      - { name: wifi_ssid, type: "string | null" }
+      - { name: wifi_password, type: "string | null" }
+      - { name: is_published, type: boolean }
+      - { name: view_count, type: integer }
+      - { name: created_at, type: ISO8601 }
+      - { name: updated_at, type: ISO8601 }
+
+  Story:
+    fields:
+      - { name: id, type: UUID }
+      - { name: guide_id, type: UUID }
+      - { name: media_url, type: string }
+      - { name: media_type, type: "enum(image, video)" }
+      - { name: order_index, type: integer }
+      - { name: label, type: "string | undefined" }
+      - { name: created_at, type: ISO8601 }
+
+  ContentBlock:
+    fields:
+      - { name: id, type: UUID }
+      - { name: type, type: BlockType }
+      - { name: order, type: integer }
+      - { name: data, type: BlockData }
+
+  ApiResponse:
+    generic: "ApiResponse<T>"
+    fields:
+      - { name: success, type: boolean }
+      - { name: data, type: "T (optional)" }
+      - { name: error, type: "ApiError (optional)" }
+
+authentication:
+  provider: "Clerk"
+  method: "JWT Bearer Token"
+  helper: "src/lib/auth.ts - getAuthUser()"
+
+metadata:
+  total_endpoints: 14
+  version: "1.0"
+  finalized_at: "2026-02-03"
+  status: "finalized"

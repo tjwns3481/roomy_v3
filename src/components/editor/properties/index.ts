@@ -1,0 +1,10 @@
+export { WifiProperties } from './WifiProperties';
+export { TextProperties } from './TextProperties';
+export { RulesProperties } from './RulesProperties';
+export { ContactProperties } from './ContactProperties';
+export { PlacesProperties } from './PlacesProperties';
+export { DevicesProperties } from './DevicesProperties';
+export { GalleryProperties } from './GalleryProperties';
+export { ImageProperties } from './ImageProperties';
+export { VideoProperties } from './VideoProperties';
+export { MapProperties } from './MapProperties';

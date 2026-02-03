@@ -4,6 +4,7 @@ import { Header } from "@/components/guest/Header";
 import { StoryBubbles } from "@/components/guest/StoryBubbles";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
+import type { Story } from "@/types";
 
 interface PageProps {
   params: Promise<{
@@ -48,8 +49,8 @@ export default async function GuestPage({ params }: PageProps) {
   });
 
   // 스토리 정렬 (order_index 기준)
-  const stories = (guide.stories || []).sort(
-    (a: any, b: any) => a.order_index - b.order_index
+  const stories = ((guide.stories || []) as Story[]).sort(
+    (a: Story, b: Story) => a.order_index - b.order_index
   );
 
   // Use first story image or placeholder for hero
@@ -64,7 +65,6 @@ export default async function GuestPage({ params }: PageProps) {
       heroImage={heroImage}
       heroTitle={guide.title}
       heroSubtitle="환영합니다!"
-      showQuickAccess={true}
     >
       <Header title={guide.title} />
 

@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { useAIChat } from '@/hooks/useAIChat';
-import type { ChatMessage as ChatMessageType } from '@/types';
 
 interface AIChatbotProps {
   guideId: string;

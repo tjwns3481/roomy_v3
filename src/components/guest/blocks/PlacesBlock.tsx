@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { PlacesBlockData } from '@/types';
+import { ROUTES } from '@/lib/routes';
 
 interface PlacesBlockProps {
   data: PlacesBlockData;
@@ -130,7 +131,7 @@ export function PlacesBlock({ data, slug }: PlacesBlockProps) {
       {/* More Link */}
       {hasMore && (
         <Link
-          href={`/g/${slug}/places`}
+          href={ROUTES.STAY_PLACES(slug)}
           className="inline-flex items-center gap-2 text-gray-900 font-medium hover:text-gray-700 transition-colors"
         >
           <span>전체 장소 보기 ({data.items.length}개)</span>

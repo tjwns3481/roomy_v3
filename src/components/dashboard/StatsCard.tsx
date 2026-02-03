@@ -1,5 +1,3 @@
-import type { StatsCardData } from '@/types/dashboard';
-
 interface StatsCardProps {
   icon: string;
   label: string;

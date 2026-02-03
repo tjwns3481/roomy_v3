@@ -1,7 +1,6 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { ContentBlock } from '@/types';
 
 // Skeleton 컴포넌트
 const EditorSkeleton = () => (

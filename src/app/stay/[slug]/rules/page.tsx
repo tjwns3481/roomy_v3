@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { GuestLayout } from "@/components/guest/GuestLayout";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import type { ContentBlock } from "@/types";
 
 interface PageProps {
   params: Promise<{
@@ -39,13 +40,13 @@ export default async function RulesPage({ params }: PageProps) {
   }
 
   // rules 블록 찾기
-  const rulesBlock = guide.content_blocks?.find(
-    (block: any) => block.type === "rules"
+  const rulesBlock = (guide.content_blocks as ContentBlock[] | null)?.find(
+    (block: ContentBlock) => block.type === "rules"
   );
 
   if (!rulesBlock) {
     // rules 블록이 없으면 메인 페이지로 리다이렉트
-    redirect(`/g/${slug}`);
+    redirect(`/stay/${slug}`);
   }
 
   const rulesData = rulesBlock.data as RulesBlockData;
@@ -68,7 +69,7 @@ export default async function RulesPage({ params }: PageProps) {
         <div className="flex items-center gap-3 py-4">
           {/* 뒤로가기 버튼 */}
           <Link
-            href={`/g/${slug}`}
+            href={`/stay/${slug}`}
             className="p-2 rounded-lg hover:bg-slate-100 active:bg-slate-200 transition-colors"
             aria-label="뒤로가기"
           >

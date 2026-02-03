@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import type { ContentBlock, RulesBlockData, RuleItem } from "@/types";
 
 /**
  * POST /api/fix-icons
@@ -19,15 +20,16 @@ export async function POST() {
     }
 
     let updatedCount = 0;
-    const debugInfo: any[] = [];
+    const debugInfo: { guideId: string; icon: string | undefined }[] = [];
 
     for (const guide of guides || []) {
       if (!guide.content_blocks) continue;
 
       let hasChanges = false;
-      const updatedBlocks = guide.content_blocks.map((block: any) => {
-        if (block.type === "rules" && block.data?.items) {
-          const updatedItems = block.data.items.map((item: any) => {
+      const updatedBlocks = (guide.content_blocks as ContentBlock[]).map((block: ContentBlock) => {
+        if (block.type === "rules" && (block.data as RulesBlockData)?.items) {
+          const rulesData = block.data as RulesBlockData;
+          const updatedItems = rulesData.items.map((item: RuleItem) => {
             debugInfo.push({ guideId: guide.id, icon: item.icon });
 
             if (item.icon) {

@@ -10,6 +10,7 @@ import { User } from "@/types";
 // Mock user data - 실제로는 Supabase에서 가져와야 함
 const mockUser: User = {
   id: "1",
+  clerk_id: "user_mock_clerk_id",
   email: "host@example.com",
   name: "김호스트",
   role: "host",

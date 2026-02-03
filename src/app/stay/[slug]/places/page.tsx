@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { PlacesContent } from "./PlacesContent";
+import type { ContentBlock, PlacesBlockData } from "@/types";
 
 interface PageProps {
   params: Promise<{
@@ -25,9 +26,14 @@ export default async function PlacesPage({ params }: PageProps) {
   }
 
   // Places 블록 찾기
-  const placesBlock = guide.content_blocks.find((block: any) => block.type === "places");
+  const placesBlock = (guide.content_blocks as ContentBlock[]).find((block: ContentBlock) => block.type === "places");
 
-  if (!placesBlock || !placesBlock.data?.items) {
+  if (!placesBlock) {
+    notFound();
+  }
+
+  const placesData = placesBlock.data as PlacesBlockData;
+  if (!placesData.items) {
     notFound();
   }
 
@@ -46,7 +52,7 @@ export default async function PlacesPage({ params }: PageProps) {
       slug={slug}
       guideTitle={guide.title}
       accommodationName={accommodationName}
-      places={placesBlock.data.items}
+      places={placesData.items}
       center={center}
     />
   );

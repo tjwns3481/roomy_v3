@@ -48,13 +48,22 @@ const demoStories: Story[] = [
 export default function DemoPage() {
   const heroImage = "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=800";
 
+  // 데모용 Quick Access 아이템 (실제로는 블록 데이터에서 생성됨)
+  const demoQuickAccess = [
+    { type: "wifi", icon: "wifi", label: "Wi-Fi", color: "blue" },
+    { type: "rules", icon: "gavel", label: "Rules", color: "purple" },
+    { type: "places", icon: "restaurant", label: "Local Food", color: "red" },
+    { type: "map", icon: "map", label: "Map", color: "green" },
+    { type: "contact", icon: "call", label: "Contact", color: "gray" },
+  ];
+
   return (
     <GuestLayout
       variant="gradient"
       heroImage={heroImage}
       heroTitle="제주 풀빌라"
       heroSubtitle="환영합니다!"
-      showQuickAccess={true}
+      quickAccessItems={demoQuickAccess}
     >
       <Header title="제주 풀빌라 가이드" />
 

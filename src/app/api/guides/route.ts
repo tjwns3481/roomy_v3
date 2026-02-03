@@ -9,7 +9,7 @@ import {
   listGuidesQuerySchema,
   generateSlug,
 } from "@/lib/validations/guide";
-import type { Guide, ApiResponse } from "@/types";
+import type { Guide, ApiResponse, ContentBlock } from "@/types";
 import { templates } from "@/data/templates";
 
 /**
@@ -211,7 +211,7 @@ export async function POST(request: NextRequest) {
 
     // 5. 템플릿 기반 초기값 설정
     let initialTitle = title || "새 가이드";
-    let initialBlocks: any[] = [];
+    let initialBlocks: ContentBlock[] = [];
     let selectedTemplate = null;
 
     if (template_id) {

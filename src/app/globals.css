@@ -3,17 +3,43 @@
 
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #0d7ff2;
-  --background-light: #f5f7f8;
-  --background-dark: #101922;
+/* Tailwind 4: 클래스 기반 다크 모드 (.dark 클래스 있을 때만 dark: 적용) */
+@custom-variant dark (&:where(.dark, .dark *));
 
-  /* Guest theme colors */
+:root {
+  /* 라이트 모드 - 더 밝고 깨끗한 색상 */
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --primary: #0d7ff2;
+  --background-light: #f8fafc;
+  --background-dark: #101922;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  /* Guest theme colors - 라이트 */
   --guest-primary: #0df2f2;
-  --guest-background-light: #f5f8f8;
+  --guest-background-light: #f8fafc;
   --guest-surface-light: #ffffff;
+}
+
+.dark {
+  /* 다크 모드 - 디자인 파일 기준 */
+  --background: #101922;
+  --foreground: #f1f5f9;
+  --background-light: #1e293b;
+  --background-dark: #0f172a;
+  --surface: #1e293b;
+  --border: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+
+  /* Guest theme colors - 다크 */
+  --guest-background-light: #1e293b;
+  --guest-surface-light: #334155;
 }
 
 @theme inline {
@@ -27,13 +53,6 @@
   --color-guest-surface-light: var(--guest-surface-light);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {

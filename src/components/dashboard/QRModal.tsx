@@ -20,7 +20,7 @@ export function QRModal({ isOpen, onClose, guide }: QRModalProps) {
   const [copySuccess, setCopySuccess] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const guideURL = `https://roomy.app/g/${guide.slug}`;
+  const guideURL = `https://roomy.app/stay/${guide.slug}`;
 
   useEffect(() => {
     if (isOpen) {

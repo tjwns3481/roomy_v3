@@ -18,7 +18,9 @@ export function DevicesBlock({ data }: DevicesBlockProps) {
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
       {/* Header */}
-      <h3 className="text-lg font-bold text-gray-900 mb-4">가전제품 사용법</h3>
+      <h3 className="text-lg font-bold text-gray-900 mb-4">
+        {data.title || "시설 안내"}
+      </h3>
 
       {/* Accordion List */}
       <div className="space-y-3">

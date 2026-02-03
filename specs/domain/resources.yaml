@@ -1,100 +1,238 @@
-# Roomy v3 - Domain Resources
-# 화면 명세에서 참조하는 도메인 리소스 정의
-
-version: "1.0"
+# Roomy v3 - Domain Resources (Finalized)
+# Version: 1.0
+# Finalized: 2026-02-03
 
 resources:
-  # 사용자
-  user:
+  users:
+    description: "사용자 정보 및 인증 (Clerk 호환)"
     fields:
-      - id: UUID
-      - email: string
-      - name: string
-      - role: enum[host, admin]
-      - created_at: timestamp
-      - updated_at: timestamp
+      - name: id
+        type: uuid
+        primary: true
+        default: "gen_random_uuid()"
+      - name: clerk_id
+        type: text
+        unique: true
+        required: true
+      - name: email
+        type: text
+        unique: true
+        required: true
+      - name: name
+        type: text
+      - name: role
+        type: text
+        required: true
+        default: "'host'"
+        check: "role in ('host', 'admin')"
+      - name: avatar_url
+        type: text
+      - name: phone
+        type: text
+      - name: created_at
+        type: timestamptz
+        default: "now()"
+      - name: updated_at
+        type: timestamptz
+        default: "now()"
+    indexes:
+      - idx_users_clerk_id
+      - idx_users_email
+      - idx_users_role
+    rls_enabled: true
 
-  # 숙소
-  accommodation:
+  accommodations:
+    description: "숙박시설 정보 (사용자별)"
     fields:
-      - id: UUID
-      - user_id: UUID
-      - name: string
-      - address: string
-      - created_at: timestamp
-      - updated_at: timestamp
-    relations:
-      - user: belongs_to
-      - guides: has_many
+      - name: id
+        type: uuid
+        primary: true
+        default: "gen_random_uuid()"
+      - name: user_id
+        type: uuid
+        required: true
+        references: "users.id (on delete cascade)"
+      - name: name
+        type: text
+        required: true
+      - name: address
+        type: text
+      - name: latitude
+        type: numeric
+      - name: longitude
+        type: numeric
+      - name: created_at
+        type: timestamptz
+        default: "now()"
+      - name: updated_at
+        type: timestamptz
+        default: "now()"
+    indexes:
+      - idx_accommodations_user_id
+    rls_enabled: true
 
-  # 가이드
-  guide:
+  guides:
+    description: "숙박 가이드 콘텐츠 (숙박시설별)"
     fields:
-      - id: UUID
-      - accommodation_id: UUID
-      - slug: string
-      - title: string
-      - content_blocks: jsonb
-      - wifi_ssid: string
-      - wifi_password: string
-      - is_published: boolean
-      - view_count: integer
-      - created_at: timestamp
-      - updated_at: timestamp
-    relations:
-      - accommodation: belongs_to
-      - stories: has_many
-      - ai_conversations: has_many
-      - visits: has_many
+      - name: id
+        type: uuid
+        primary: true
+        default: "gen_random_uuid()"
+      - name: accommodation_id
+        type: uuid
+        required: true
+        references: "accommodations.id (on delete cascade)"
+      - name: slug
+        type: text
+        required: true
+      - name: title
+        type: text
+        required: true
+      - name: content_blocks
+        type: jsonb
+        required: true
+        default: "'[]'::jsonb"
+      - name: wifi_ssid
+        type: text
+      - name: wifi_password
+        type: text
+      - name: is_published
+        type: boolean
+        default: "false"
+      - name: view_count
+        type: integer
+        default: "0"
+      - name: created_at
+        type: timestamptz
+        default: "now()"
+      - name: updated_at
+        type: timestamptz
+        default: "now()"
+    constraints:
+      - type: unique
+        fields: [slug, accommodation_id]
+    indexes:
+      - idx_guides_accommodation_id
+      - idx_guides_is_published
+      - idx_guides_created_at
+      - idx_guides_slug_accommodation
+    rls_enabled: true
 
-  # 스토리
-  story:
+  stories:
+    description: "가이드 스토리 미디어 (이미지/비디오)"
     fields:
-      - id: UUID
-      - guide_id: UUID
-      - media_url: string
-      - media_type: enum[image, video]
-      - order_index: integer
-      - created_at: timestamp
-    relations:
-      - guide: belongs_to
+      - name: id
+        type: uuid
+        primary: true
+        default: "gen_random_uuid()"
+      - name: guide_id
+        type: uuid
+        required: true
+        references: "guides.id (on delete cascade)"
+      - name: media_url
+        type: text
+        required: true
+      - name: media_type
+        type: text
+        required: true
+        check: "media_type in ('image', 'video')"
+      - name: order_index
+        type: integer
+        default: "0"
+      - name: label
+        type: text
+      - name: created_at
+        type: timestamptz
+        default: "now()"
+    indexes:
+      - idx_stories_guide_id
+      - idx_stories_guide_id_order_index
+    rls_enabled: true
 
-  # AI 대화
-  ai_conversation:
+  visits:
+    description: "가이드 방문 기록 추적"
     fields:
-      - id: UUID
-      - guide_id: UUID
-      - session_id: string
-      - question: string
-      - answer: string
-      - created_at: timestamp
-    relations:
-      - guide: belongs_to
+      - name: id
+        type: uuid
+        primary: true
+        default: "gen_random_uuid()"
+      - name: guide_id
+        type: uuid
+        required: true
+        references: "guides.id (on delete cascade)"
+      - name: visitor_ip
+        type: text
+      - name: user_agent
+        type: text
+      - name: created_at
+        type: timestamptz
+        default: "now()"
+    indexes:
+      - idx_visits_guide_id
+      - idx_visits_created_at
+      - idx_visits_guide_id_created_at
+    rls_enabled: true
 
-  # 방문 기록
-  visit:
+  ai_conversations:
+    description: "AI 챗봇 대화 기록 저장"
     fields:
-      - id: UUID
-      - guide_id: UUID
-      - visitor_ip: string
-      - user_agent: string
-      - created_at: timestamp
-    relations:
-      - guide: belongs_to
+      - name: id
+        type: uuid
+        primary: true
+        default: "gen_random_uuid()"
+      - name: guide_id
+        type: uuid
+        required: true
+        references: "guides.id (on delete cascade)"
+      - name: session_id
+        type: text
+        required: true
+      - name: question
+        type: text
+        required: true
+      - name: answer
+        type: text
+        required: true
+      - name: created_at
+        type: timestamptz
+        default: "now()"
+    indexes:
+      - idx_ai_conversations_guide_id
+      - idx_ai_conversations_session_id
+      - idx_ai_conversations_created_at
+    rls_enabled: true
 
-# 콘텐츠 블록 타입
-block_types:
-  wifi:
-    fields: [ssid, password, note]
-  rules:
-    fields: [checkIn, checkOut, items]
-  devices:
-    fields: [items[name, description, imageUrl]]
-  places:
-    fields: [items[name, category, address, mapUrl]]
-  text:
-    fields: [title, content]
-  image:
-    fields: [url, caption]
-  video:
-    fields: [url, caption]
+entity_relationships:
+  - from: users
+    to: accommodations
+    cardinality: "1:N"
+    foreign_key: "user_id"
+    cascade_delete: true
+  - from: accommodations
+    to: guides
+    cardinality: "1:N"
+    foreign_key: "accommodation_id"
+    cascade_delete: true
+  - from: guides
+    to: stories
+    cardinality: "1:N"
+    foreign_key: "guide_id"
+    cascade_delete: true
+  - from: guides
+    to: visits
+    cardinality: "1:N"
+    foreign_key: "guide_id"
+    cascade_delete: true
+  - from: guides
+    to: ai_conversations
+    cardinality: "1:N"
+    foreign_key: "guide_id"
+    cascade_delete: true
+
+metadata:
+  project: "Roomy v3"
+  stack: "Next.js 15 + TypeScript + TailwindCSS + Supabase"
+  total_tables: 6
+  version: "1.0"
+  finalized_at: "2026-02-03"
+  status: "finalized"

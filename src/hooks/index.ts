@@ -8,3 +8,6 @@ export {
   type GuideAutoSaveData,
 } from "./useAutoSave";
 export { useAIChat } from "./useAIChat";
+export { useSaveGuide } from "./useSaveGuide";
+export { useHistory } from "./useHistory";
+export { useKeyboardShortcuts } from "./useKeyboardShortcuts";

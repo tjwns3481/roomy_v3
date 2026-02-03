@@ -4,6 +4,7 @@ import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { useState } from 'react';
 import { X, Phone, MapPin, FileText, Share2, MessageCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { ROUTES, getFullUrl } from '@/lib/routes';
 
 interface QuickActionsSheetProps {
   isOpen: boolean;
@@ -31,7 +32,7 @@ export function QuickActionsSheet({
   const router = useRouter();
   const [dragY, setDragY] = useState(0);
 
-  const handleDragEnd = (_: any, info: PanInfo) => {
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.y > 100) {
       onClose();
     }
@@ -39,7 +40,7 @@ export function QuickActionsSheet({
   };
 
   const handleShare = async () => {
-    const shareUrl = `${window.location.origin}/g/${slug}`;
+    const shareUrl = getFullUrl(ROUTES.STAY(slug));
     const shareData = {
       title: guideTitle,
       text: `${guideTitle} - Roomy 숙박 가이드`,
@@ -81,7 +82,7 @@ export function QuickActionsSheet({
       bgColor: 'bg-red-50',
       onClick: () => {
         // Navigate to nearby places section
-        router.push(`/g/${slug}#nearby`);
+        router.push(`${ROUTES.STAY(slug)}#nearby`);
         onClose();
       }
     },
@@ -93,7 +94,7 @@ export function QuickActionsSheet({
       bgColor: 'bg-green-50',
       onClick: () => {
         // Navigate to guide section
-        router.push(`/g/${slug}#guide`);
+        router.push(`${ROUTES.STAY(slug)}#guide`);
         onClose();
       }
     },

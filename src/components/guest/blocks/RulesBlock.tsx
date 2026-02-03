@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { RulesBlockData } from '@/types';
+import { ROUTES } from '@/lib/routes';
 
 interface RulesBlockProps {
   data: RulesBlockData;
@@ -71,7 +72,7 @@ export function RulesBlock({ data, slug }: RulesBlockProps) {
       {/* More Link */}
       {hasMore && (
         <Link
-          href={`/g/${slug}/rules`}
+          href={ROUTES.STAY_RULES(slug)}
           className="inline-flex items-center gap-2 text-gray-900 font-medium hover:text-gray-700 transition-colors"
         >
           <span>전체 규칙 보기</span>

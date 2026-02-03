@@ -4,3 +4,7 @@ export { DevicesBlock } from './DevicesBlock';
 export { PlacesBlock } from './PlacesBlock';
 export { TextBlock } from './TextBlock';
 export { GalleryBlock } from './GalleryBlock';
+export { MapBlock } from './MapBlock';
+export { ImageBlock } from './ImageBlock';
+export { VideoBlock } from './VideoBlock';
+export { ContactBlock } from './ContactBlock';

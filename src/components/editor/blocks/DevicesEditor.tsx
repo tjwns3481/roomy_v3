@@ -89,19 +89,32 @@ export function DevicesEditor({ block, onChange }: DevicesEditorProps) {
     });
   };
 
+  const handleTitleChange = (newTitle: string) => {
+    onChange({
+      ...data,
+      title: newTitle,
+    });
+  };
+
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900">기기 사용법</h3>
-          <p className="text-sm text-gray-500 mt-0.5">
-            숙소 내 기기 사용 방법을 안내하세요
-          </p>
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-gray-900">블록 제목</h3>
+          <Button onClick={handleAddDevice} size="sm" variant="primary">
+            기기 추가
+          </Button>
         </div>
-        <Button onClick={handleAddDevice} size="sm" variant="primary">
-          기기 추가
-        </Button>
+        <Input
+          value={data.title || "시설 안내"}
+          onChange={(e) => handleTitleChange(e.target.value)}
+          placeholder="블록 제목 입력 (예: 시설 안내, 가전제품 사용법)"
+          className="font-medium"
+        />
+        <p className="text-sm text-gray-500">
+          숙소 내 기기 사용 방법을 안내하세요
+        </p>
       </div>
 
       {/* Device List */}

@@ -100,7 +100,8 @@ export default function SignUpPage() {
 
     try {
       await signUp.authenticateWithRedirect({
-        strategy,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        strategy: strategy as any, // Clerk types don't include Kakao OAuth
         redirectUrl: '/sso-callback',
         redirectUrlComplete: '/dashboard',
       });

@@ -120,6 +120,7 @@ export function AddBlockMenu({ onSelect, onClose }: AddBlockMenuProps) {
 
   const handleSelectBlock = (template: BlockTemplate) => {
     const newBlock: ContentBlock = {
+      // eslint-disable-next-line react-hooks/purity -- ID generated in event handler, not during render
       id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       type: template.type,
       order: 0, // Will be set by BlockList

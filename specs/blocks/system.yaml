@@ -1,0 +1,209 @@
+# Roomy v3 - Block System (Finalized)
+# Version: 1.0
+# Finalized: 2026-02-03
+
+blocks:
+  wifi:
+    name: "Wi-Fi"
+    description: "숙소의 Wi-Fi 네트워크 정보 공유 블록"
+    icon: "wifi"
+    data_schema:
+      ssid: { type: string, required: true, default: "" }
+      password: { type: string, required: true, default: "" }
+      networkType: { type: string, default: "WPA2" }
+      note: { type: string, default: "" }
+    editor_component: "WifiEditor"
+    properties_panel: "WifiProperties"
+    renderer_component: "WifiBlock"
+    status: "complete"
+
+  rules:
+    name: "이용 규칙"
+    description: "체크인/아웃 시간 및 숙소 이용 규칙"
+    icon: "gavel"
+    data_schema:
+      checkIn: { type: string, required: true, default: "15:00" }
+      checkOut: { type: string, required: true, default: "11:00" }
+      items:
+        type: array
+        item_schema:
+          id: { type: string, required: true }
+          text: { type: string, required: true }
+          icon: { type: string }
+          category: { type: string, default: "guide" }
+    editor_component: "RulesEditor"
+    properties_panel: "RulesProperties"
+    renderer_component: "RulesBlock"
+    features: ["드래그 & 드롭 순서 변경"]
+    status: "complete"
+
+  devices:
+    name: "시설 안내"
+    description: "숙소 내 가전제품 및 기기 사용 방법"
+    icon: "devices"
+    data_schema:
+      title: { type: string, default: "시설 안내" }
+      items:
+        type: array
+        item_schema:
+          name: { type: string, required: true }
+          description: { type: string, required: true }
+          imageUrl: { type: string }
+    editor_component: "DevicesEditor"
+    properties_panel: "DevicesProperties"
+    renderer_component: "DevicesBlock"
+    features: ["아코디언 UI"]
+    status: "complete"
+
+  places:
+    name: "주변 장소"
+    description: "주변 맛집, 카페, 관광지 추천"
+    icon: "location_on"
+    data_schema:
+      items:
+        type: array
+        item_schema:
+          name: { type: string, required: true }
+          category: { type: string, required: true }
+          address: { type: string, required: true }
+          mapUrl: { type: string }
+          rating: { type: number }
+          isHostPick: { type: boolean, default: false }
+    editor_component: "PlacesEditor"
+    properties_panel: "PlacesProperties"
+    renderer_component: "PlacesBlock"
+    status: "complete"
+
+  text:
+    name: "텍스트"
+    description: "제목과 본문 텍스트"
+    icon: "article"
+    data_schema:
+      title: { type: string, default: "" }
+      content: { type: string, required: true, default: "여기에 내용을 입력하세요." }
+      alignment: { type: string, default: "left", enum: ["left", "center", "right"] }
+      fontSize: { type: string, default: "md", enum: ["sm", "md", "lg"] }
+    editor_component: "TextEditor"
+    properties_panel: "TextProperties"
+    renderer_component: "TextBlock"
+    features: ["Markdown 지원"]
+    status: "complete"
+
+  image:
+    name: "이미지"
+    description: "단일 이미지 표시"
+    icon: "image"
+    data_schema:
+      url: { type: string, required: true }
+      caption: { type: string }
+    properties_panel: "ImageProperties"
+    renderer_component: "ImageBlock"
+    features: ["라이트박스 확대 보기"]
+    status: "complete"
+
+  video:
+    name: "비디오"
+    description: "YouTube/Vimeo 비디오 삽입"
+    icon: "video_library"
+    data_schema:
+      url: { type: string, required: true }
+      caption: { type: string }
+      autoplay: { type: boolean, default: false }
+    properties_panel: "VideoProperties"
+    renderer_component: "VideoBlock"
+    features: ["YouTube/Vimeo URL → embed 자동 변환", "직접 비디오 URL 지원 (mp4, webm)"]
+    status: "complete"
+
+  gallery:
+    name: "갤러리"
+    description: "여러 이미지를 그리드/슬라이더로 표시"
+    icon: "photo_library"
+    data_schema:
+      images:
+        type: array
+        item_schema:
+          id: { type: string, required: true }
+          url: { type: string, required: true }
+          caption: { type: string }
+          order: { type: number }
+      layout: { type: string, default: "grid", enum: ["grid", "slider"] }
+    editor_component: "GalleryEditor"
+    properties_panel: "GalleryProperties"
+    renderer_component: "GalleryBlock"
+    features: ["라이트박스", "키보드 네비게이션"]
+    status: "complete"
+
+  map:
+    name: "지도"
+    description: "카카오맵 위치 표시"
+    icon: "location_on"
+    data_schema:
+      latitude: { type: number, required: true }
+      longitude: { type: number, required: true }
+      zoom: { type: number, default: 15 }
+      address: { type: string }
+    properties_panel: "MapProperties"
+    renderer_component: "MapBlock"
+    features: ["카카오맵 API", "Geocoding", "길찾기"]
+    status: "complete"
+
+  contact:
+    name: "연락처"
+    description: "호스트 연락처 정보"
+    icon: "person"
+    data_schema:
+      name: { type: string, required: true }
+      phone: { type: string, required: true }
+      email: { type: string }
+      kakaoId: { type: string }
+    properties_panel: "ContactProperties"
+    renderer_component: "ContactBlock"
+    features: ["전화/이메일 원클릭 연결", "카카오톡 오픈채팅 링크"]
+    status: "complete"
+
+architecture:
+  data_layer:
+    location: "src/types/index.ts"
+    pattern: "Union type BlockData"
+
+  default_values:
+    location: "src/data/defaultBlockData.ts"
+
+  editor_layer:
+    location: "src/components/editor/blocks/"
+    dynamic_loader: "DynamicBlockEditors.tsx"
+
+  properties_layer:
+    location: "src/components/editor/properties/"
+
+  guest_layer:
+    location: "src/components/guest/blocks/"
+    dynamic_renderer: "DynamicBlockRenderer.tsx"
+
+data_flow:
+  edit: "BlockData → Editor → onChange → State Update"
+  preview: "BlockData → EditorPhonePreview → Live Render"
+  guest: "BlockData → DynamicBlockRenderer → Block Component"
+
+block_types_enum:
+  - wifi
+  - rules
+  - devices
+  - places
+  - text
+  - image
+  - video
+  - gallery
+  - map
+  - contact
+
+summary:
+  total_blocks: 10
+  complete: 10
+  partial: 0
+  stub: 0
+
+metadata:
+  version: "1.0"
+  finalized_at: "2026-02-03"
+  status: "finalized"

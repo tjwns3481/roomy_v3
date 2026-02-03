@@ -45,7 +45,7 @@ export default function Home() {
             무료로 시작하기
           </Link>
           <Link
-            href="/g/demo"
+            href="/stay/demo"
             className="px-8 py-4 text-lg font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700"
           >
             데모 보기

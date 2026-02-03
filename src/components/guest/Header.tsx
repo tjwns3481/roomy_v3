@@ -8,9 +8,11 @@ export function Header({ title }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 bg-guest-background-light/80 backdrop-blur-md">
       <div className="flex items-center justify-between p-4 pb-2">
-        {/* Villa Icon */}
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white shadow-sm text-slate-900">
-          <span className="material-symbols-outlined">villa</span>
+        {/* Roomy Text Logo */}
+        <div className="flex items-center justify-center w-20 shrink-0">
+          <span className="text-xl font-black text-slate-900 tracking-tight">
+            Roomy
+          </span>
         </div>
 
         {/* Guide Title */}

@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+
+# Worktree directories (separate git worktrees)
+worktree/
+
+# E2E tests (separate lint config)
+e2e/

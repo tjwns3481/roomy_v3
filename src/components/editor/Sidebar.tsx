@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { BlockPaletteItem } from "@/types/editor";
 import { BlockType } from "@/types";
+import { cn } from "@/lib/utils";
 
 const blockPalette: BlockPaletteItem[] = [
   // Basic Info
@@ -26,15 +28,32 @@ interface SidebarProps {
 }
 
 export function Sidebar({ onAddBlock }: SidebarProps) {
-  const basicBlocks = blockPalette.filter((b) => b.category === "basic");
-  const contentBlocks = blockPalette.filter((b) => b.category === "content");
-  const locationBlocks = blockPalette.filter((b) => b.category === "location");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // 검색어로 필터링된 블록 목록
+  const filteredBlocks = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return blockPalette;
+    }
+    const query = searchQuery.toLowerCase();
+    return blockPalette.filter(
+      (block) =>
+        block.label.toLowerCase().includes(query) ||
+        block.type.toLowerCase().includes(query)
+    );
+  }, [searchQuery]);
+
+  const basicBlocks = filteredBlocks.filter((b) => b.category === "basic");
+  const contentBlocks = filteredBlocks.filter((b) => b.category === "content");
+  const locationBlocks = filteredBlocks.filter((b) => b.category === "location");
 
   const handleBlockClick = (type: BlockType) => {
     if (onAddBlock) {
       onAddBlock(type);
     }
   };
+
+  const hasResults = filteredBlocks.length > 0;
 
   return (
     <aside className="w-[280px] bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col shrink-0">
@@ -47,33 +66,62 @@ export function Sidebar({ onAddBlock }: SidebarProps) {
           <input
             type="text"
             placeholder="블록 검색..."
-            className="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-lg pl-10 pr-4 py-2 text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500/20"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-lg pl-10 pr-10 py-2 text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500/20"
           />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+            >
+              <span className="material-symbols-outlined text-[18px]">close</span>
+            </button>
+          )}
         </div>
       </div>
 
       {/* Block Categories */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        {/* Basic Info */}
-        <BlockCategory
-          title="기본정보 (Basic)"
-          blocks={basicBlocks}
-          onBlockClick={handleBlockClick}
-        />
+        {!hasResults ? (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <span className="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600 mb-3">
+              search_off
+            </span>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              &quot;{searchQuery}&quot;에 대한 검색 결과가 없습니다
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Basic Info */}
+            {basicBlocks.length > 0 && (
+              <BlockCategory
+                title="기본정보 (Basic)"
+                blocks={basicBlocks}
+                onBlockClick={handleBlockClick}
+              />
+            )}
 
-        {/* Content */}
-        <BlockCategory
-          title="콘텐츠 (Content)"
-          blocks={contentBlocks}
-          onBlockClick={handleBlockClick}
-        />
+            {/* Content */}
+            {contentBlocks.length > 0 && (
+              <BlockCategory
+                title="콘텐츠 (Content)"
+                blocks={contentBlocks}
+                onBlockClick={handleBlockClick}
+              />
+            )}
 
-        {/* Location */}
-        <BlockCategory
-          title="위치 (Location)"
-          blocks={locationBlocks}
-          onBlockClick={handleBlockClick}
-        />
+            {/* Location */}
+            {locationBlocks.length > 0 && (
+              <BlockCategory
+                title="위치 (Location)"
+                blocks={locationBlocks}
+                onBlockClick={handleBlockClick}
+              />
+            )}
+          </>
+        )}
       </div>
     </aside>
   );
@@ -93,20 +141,36 @@ function BlockCategory({ title, blocks, onBlockClick }: BlockCategoryProps) {
       </h3>
       <div className="grid grid-cols-2 gap-2">
         {blocks.map((block) => (
-          <button
+          <DraggableBlockItem
             key={block.type}
+            block={block}
             onClick={() => onBlockClick(block.type)}
-            className="group flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30 cursor-pointer transition-all bg-white dark:bg-slate-900 shadow-sm hover:shadow-md"
-          >
-            <span className="material-symbols-outlined text-slate-600 dark:text-slate-300 group-hover:text-blue-500 text-[28px]">
-              {block.icon}
-            </span>
-            <span className="text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-blue-500">
-              {block.label}
-            </span>
-          </button>
+          />
         ))}
       </div>
     </div>
+  );
+}
+
+interface DraggableBlockItemProps {
+  block: BlockPaletteItem;
+  onClick: () => void;
+}
+
+function DraggableBlockItem({ block, onClick }: DraggableBlockItemProps) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "group flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30 cursor-pointer transition-all bg-white dark:bg-slate-900 shadow-sm hover:shadow-md"
+      )}
+    >
+      <span className="material-symbols-outlined text-slate-600 dark:text-slate-300 group-hover:text-blue-500 text-[28px]">
+        {block.icon}
+      </span>
+      <span className="text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-blue-500">
+        {block.label}
+      </span>
+    </button>
   );
 }

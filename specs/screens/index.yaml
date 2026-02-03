@@ -1,79 +1,273 @@
-# Roomy v3 - Screen Index
-# 화면 목록 및 design/ HTML 파일 매핑
-
-version: "2.0"
+# Roomy v3 - Screen Specs (Finalized)
+# Version: 1.0
+# Finalized: 2026-02-03
 
 screens:
-  # 인증 (Auth)
-  auth:
-    - id: login
-      route: /login
-      design: design/04-login.html
-    - id: signup
-      route: /signup
-      design: design/08-signup.html
-    - id: forgot-password
-      route: /forgot-password
-      design: null  # 미생성
+  # ===== Auth =====
+  sign_in:
+    name: "로그인"
+    route: "/sign-in"
+    auth: none
+    description: "사용자 로그인 화면 - 이메일/비밀번호 또는 소셜 로그인"
+    components:
+      - sign-in-hero (background)
+      - sign-in-card (form card)
+        - brand-header
+        - email-input
+        - password-input
+        - forgot-password-link
+        - submit-button
+        - google-button
+        - kakao-button
+        - signup-link
+    actions:
+      - submit-login → signIn.create() → /dashboard
+      - social-login → OAuth redirect → /sso-callback
+    state: [email, password, showPassword, error, isLoading]
 
-  # 호스트 (Host)
-  host:
-    - id: dashboard
-      route: /dashboard
-      design: design/03-dashboard.html
-    - id: editor
-      route: /editor/:guideId
-      design: design/01-block-editor.html
-    - id: template-select
-      route: /templates
-      design: design/09-template-select.html
-    - id: settings
-      route: /settings
-      design: design/10-settings.html
-    - id: qr-modal
-      route: null  # modal
-      design: design/07-qr-modal.html
-    - id: pricing
-      route: /pricing
-      design: null  # 미생성
+  sign_up:
+    name: "회원가입"
+    route: "/sign-up"
+    auth: none
+    description: "사용자 회원가입 화면 - 이메일 인증 포함"
+    components:
+      - signup-card (form card)
+        - email-input
+        - password-input
+        - confirm-password-input
+        - terms-checkbox
+        - submit-button
+        - google-button
+        - kakao-button
+      - verification-modal (조건부)
+    actions:
+      - submit-signup → signUp.create() → prepareEmailAddressVerification()
+      - verify-email → attemptEmailAddressVerification() → /dashboard
+    state: [email, password, confirmPassword, agreedToTerms, pendingVerification, verificationCode]
 
-  # 게스트 (Guest)
-  guest:
-    - id: guest-main
-      route: /g/:slug
-      design: design/02-guest-main.html
-    - id: story-viewer
-      route: null  # overlay
-      design: design/11-story-viewer.html
-    - id: bottomsheet
-      route: null  # component
-      design: design/06-wifi-bottomsheet.html
-    - id: detail-rules
-      route: /g/:slug/rules
-      design: design/12-house-rules.html
-    - id: detail-places
-      route: /g/:slug/places
-      design: design/13-local-map.html
-    - id: ai-chatbot
-      route: null  # overlay/bottomsheet
-      design: design/05-ai-chatbot.html
+  sso_callback:
+    name: "SSO 콜백"
+    route: "/sso-callback"
+    auth: none
+    description: "OAuth 소셜 로그인 콜백 처리 (Clerk)"
+    components:
+      - loading-spinner
+    actions:
+      - handle-oauth-callback → redirect to /dashboard
 
-  # 관리자 (Admin)
+  # ===== Host =====
+  dashboard:
+    name: "대시보드"
+    route: "/dashboard"
+    auth: required
+    description: "호스트의 가이드 목록 및 관리 화면"
+    data_requirements:
+      - resource: Guide
+        needs: [id, title, slug, is_published, view_count, updated_at]
+        source: "GET /api/guides"
+    components:
+      - header (sticky)
+        - logo
+        - theme-toggle
+        - notification-button
+        - user-button (Clerk)
+      - guides-section
+        - section-header (제목 + 새 가이드 버튼)
+        - loading-spinner (조건부)
+        - empty-state (조건부)
+        - guides-grid
+          - guide-card (repeating)
+          - new-guide-card
+    actions:
+      - create-new-guide → /templates
+      - edit-guide → /editor/{guideId}
+      - delete-guide → confirm → filter guides
+    state: [guides, isLoading]
+
+  templates:
+    name: "템플릿 선택"
+    route: "/templates"
+    auth: required
+    description: "가이드 생성을 위한 템플릿 선택"
+    data_requirements:
+      - resource: Template
+        needs: [id, name, category, description, thumbnail, blocks]
+        source: "src/data/templates.ts"
+    components:
+      - header (뒤로가기 + 로고)
+      - hero-section (제목 + 설명)
+      - templates-grid
+        - template-card (repeating)
+          - thumbnail
+          - info-block
+          - select-button
+      - divider-section
+        - blank-button (빈 페이지로 시작)
+    actions:
+      - select-template → /editor/temp-{templateId}-{timestamp}
+      - start-blank → /editor/temp-{timestamp}
+    state: [isCreating]
+
+  editor:
+    name: "가이드 에디터"
+    route: "/editor/[guideId]"
+    auth: required
+    description: "가이드 콘텐츠 편집 화면 - 블록 기반 편집기"
+    data_requirements:
+      - resource: ContentBlock
+        needs: [id, type, order, data]
+      - resource: Story
+        needs: [id, media_url, media_type, order_index]
+      - resource: Guide
+        needs: [title, slug, heroImage, is_published]
+    components:
+      - editor-layout (DnD Context)
+        - sidebar (블록 추가 메뉴)
+        - canvas
+          - phone-preview
+            - hero-section
+            - story-bubbles (조건부)
+            - content-blocks (repeating)
+        - property-panel (조건부)
+          - hero-properties
+          - block-properties
+          - story-properties
+          - theme-panel
+    actions:
+      - add-block → setBlocks
+      - edit-block → setSelectedBlockId + setEditMode
+      - delete-block → filter blocks
+      - reorder-blocks → DnD onDragEnd
+      - toggle-device-mode → mobile/desktop
+      - publish-guide → POST /api/guides
+      - preview-guide → window.open(/stay/{slug})
+    state: [blocks, stories, heroData, theme, selectedBlockId, editMode, deviceMode, isPublished, showStory]
+    hooks: [useSaveGuide]
+
+  settings:
+    name: "설정"
+    route: "/settings"
+    auth: required
+    description: "호스트 계정 설정 및 프로필 관리"
+    components:
+      - settings-layout
+        - sidebar (네비게이션)
+          - nav-profile
+          - nav-contact
+          - nav-password
+          - nav-plan
+          - logout-button
+        - main-content
+          - profile-form (조건부)
+          - contact-form (조건부)
+          - password-form (조건부, 미구현)
+          - plan-card (조건부)
+    actions:
+      - switch-menu → setActiveMenu
+      - update-profile → setUser → alert
+      - logout → TODO
+    state: [activeMenu, user]
+
+  # ===== Guest =====
+  guest_view:
+    name: "게스트 뷰"
+    route: "/stay/[slug]"
+    auth: none
+    type: server-component
+    description: "게스트가 보는 가이드 페이지"
+    data_requirements:
+      - resource: Guide
+        needs: [id, title, slug, is_published, content_blocks]
+        source: "Supabase (by slug, is_published=true)"
+      - resource: Story
+        needs: [id, media_url, media_type, order_index, label]
+    side_effects:
+      - Log Visit → visits table
+    components:
+      - guest-layout
+        - hero-section
+        - header
+        - story-bubbles (조건부)
+        - block-renderer (repeating)
+        - ai-chatbot
+    error_handling:
+      - notFound() when !guide
+    metadata:
+      generateMetadata: true
+      title: "{guide.title} | Roomy"
+
+  guest_places:
+    name: "주변 장소"
+    route: "/stay/[slug]/places"
+    auth: none
+    description: "주변 장소 상세 페이지"
+
+  guest_rules:
+    name: "이용 규칙"
+    route: "/stay/[slug]/rules"
+    auth: none
+    description: "이용 규칙 상세 페이지"
+
+  # ===== Marketing =====
+  home:
+    name: "홈페이지"
+    route: "/"
+    auth: none
+    description: "Roomy 소개 및 시작 페이지"
+    type: marketing
+
+  # ===== Admin =====
   admin:
-    - id: admin-dashboard
-      route: /admin
-      design: design/14-admin-dashboard.html
-    - id: admin-users
-      route: /admin/users
-      design: null  # 미생성
-    - id: admin-guides
-      route: /admin/guides
-      design: null  # 미생성
-    - id: admin-ai-logs
-      route: /admin/ai-logs
-      design: null  # 미생성
+    name: "관리자 대시보드"
+    route: "/admin"
+    auth: admin_only
+    description: "플랫폼 통계 및 사용자 활동 모니터링"
+    components:
+      - stats-grid
+      - activity-table
+      - charts
+
+  # ===== Demo (개발/테스트용) =====
+  demo_main:
+    name: "데모 메인"
+    route: "/demo"
+    auth: none
+    type: development
+
+  demo_blocks:
+    name: "블록 데모"
+    route: "/demo/blocks"
+    auth: none
+    type: development
+
+  demo_chatbot:
+    name: "챗봇 데모"
+    route: "/demo/chatbot"
+    auth: none
+    type: development
+
+  demo_editor_ui:
+    name: "에디터 UI 데모"
+    route: "/demo/editor-ui"
+    auth: none
+    type: development
+
+  demo_story_editor:
+    name: "스토리 에디터 데모"
+    route: "/demo/story-editor"
+    auth: none
+    type: development
 
 summary:
-  total: 18
-  with_design: 14
-  pending: 4
+  total_screens: 17
+  auth_screens: 3
+  host_screens: 4
+  guest_screens: 3
+  admin_screens: 1
+  marketing_screens: 1
+  demo_screens: 5
+
+metadata:
+  version: "1.0"
+  finalized_at: "2026-02-03"
+  status: "finalized"

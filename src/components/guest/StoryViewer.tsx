@@ -151,6 +151,7 @@ export function StoryViewer({
 
   // 인덱스 변경 시 초기화
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Reset progress on index change
     setProgress(0);
     startTimeRef.current = Date.now();
     pausedTimeRef.current = 0;

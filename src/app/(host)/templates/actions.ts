@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getAuthUser } from "@/lib/auth";
 import { templates } from "@/data/templates";
 import { generateSlug } from "@/lib/validations/guide";
+import type { ContentBlock } from "@/types";
 
 export async function createGuideAction(templateId: string | null) {
   // 1. 인증 확인
@@ -21,7 +22,7 @@ export async function createGuideAction(templateId: string | null) {
 
   // 3. 템플릿 기반 초기값 설정
   let initialTitle = "새 가이드";
-  let initialBlocks: any[] = [];
+  let initialBlocks: ContentBlock[] = [];
 
   if (templateId) {
     const selectedTemplate = templates.find((t) => t.id === templateId);
@@ -32,7 +33,7 @@ export async function createGuideAction(templateId: string | null) {
   }
 
   // 4. 사용자의 첫 번째 숙소 가져오기 (없으면 자동 생성)
-  let { data: accommodations, error: accError } = await supabase
+  const { data: accommodations, error: accError } = await supabase
     .from("accommodations")
     .select("id")
     .eq("user_id", user.id)

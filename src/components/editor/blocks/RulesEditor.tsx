@@ -33,7 +33,7 @@ const RULE_ICONS = [
   'info',
   'schedule',
   'pets',
-  'no_smoking',
+  'smoke_free',
   'volume_off',
   'cleaning_services',
   'local_parking',
@@ -58,7 +58,7 @@ export function RulesEditor({ block, onChange }: RulesEditorProps) {
     })
   );
 
-  const handleChange = (field: keyof RulesBlockData, value: any) => {
+  const handleChange = (field: keyof RulesBlockData, value: RulesBlockData[keyof RulesBlockData]) => {
     onChange({
       ...data,
       [field]: value,

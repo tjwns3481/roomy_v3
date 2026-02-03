@@ -2,7 +2,19 @@
 
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-import { ContentBlock } from '@/types';
+import {
+  ContentBlock,
+  WifiBlockData,
+  RulesBlockData,
+  DevicesBlockData,
+  PlacesBlockData,
+  TextBlockData,
+  GalleryBlockData,
+  MapBlockData,
+  ImageBlockData,
+  VideoBlockData,
+  ContactBlockData,
+} from '@/types';
 
 // Block Skeleton
 const BlockSkeleton = () => (
@@ -47,6 +59,26 @@ const GalleryBlock = dynamic(
   { ssr: false, loading: () => <BlockSkeleton /> }
 );
 
+const MapBlock = dynamic(
+  () => import('./blocks/MapBlock').then(mod => ({ default: mod.MapBlock })),
+  { ssr: false, loading: () => <BlockSkeleton /> }
+);
+
+const ImageBlock = dynamic(
+  () => import('./blocks/ImageBlock').then(mod => ({ default: mod.ImageBlock })),
+  { ssr: false, loading: () => <BlockSkeleton /> }
+);
+
+const VideoBlock = dynamic(
+  () => import('./blocks/VideoBlock').then(mod => ({ default: mod.VideoBlock })),
+  { ssr: false, loading: () => <BlockSkeleton /> }
+);
+
+const ContactBlock = dynamic(
+  () => import('./blocks/ContactBlock').then(mod => ({ default: mod.ContactBlock })),
+  { ssr: false, loading: () => <BlockSkeleton /> }
+);
+
 interface DynamicBlockRendererProps {
   block: ContentBlock;
   slug: string;
@@ -58,29 +90,34 @@ export function DynamicBlockRenderer({ block, slug }: DynamicBlockRendererProps)
       {(() => {
         switch (block.type) {
           case 'wifi':
-            return <WifiBlock data={block.data as any} />;
+            return <WifiBlock data={block.data as WifiBlockData} />;
 
           case 'rules':
-            return <RulesBlock data={block.data as any} slug={slug} />;
+            return <RulesBlock data={block.data as RulesBlockData} slug={slug} />;
 
           case 'devices':
-            return <DevicesBlock data={block.data as any} />;
+            return <DevicesBlock data={block.data as DevicesBlockData} />;
 
           case 'places':
-            return <PlacesBlock data={block.data as any} slug={slug} />;
+            return <PlacesBlock data={block.data as PlacesBlockData} slug={slug} />;
 
           case 'text':
-            return <TextBlock data={block.data as any} />;
+            return <TextBlock data={block.data as TextBlockData} />;
 
           case 'gallery':
-            return <GalleryBlock data={block.data as any} />;
+            return <GalleryBlock data={block.data as GalleryBlockData} />;
 
-          // Unsupported or future block types
-          case 'image':
-          case 'video':
           case 'map':
+            return <MapBlock data={block.data as MapBlockData} />;
+
+          case 'image':
+            return <ImageBlock data={block.data as ImageBlockData} />;
+
+          case 'video':
+            return <VideoBlock data={block.data as VideoBlockData} />;
+
           case 'contact':
-            return null;
+            return <ContactBlock data={block.data as ContactBlockData} />;
 
           default:
             return null;

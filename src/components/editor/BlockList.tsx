@@ -80,6 +80,7 @@ export function BlockList({
 
     const newBlock: ContentBlock = {
       ...blockToDuplicate,
+      // eslint-disable-next-line react-hooks/purity -- ID generated in event handler, not during render
       id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       order: blocks.length,
     };
